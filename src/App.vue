@@ -1,0 +1,77 @@
+<script>
+import Header from './components/Header.vue'
+import TemporalRouting from './components/TemporalRouting.vue'
+import Register from './components/Register.vue'
+import Login from './components/Login.vue'
+import Listing from './components/Listing.vue'
+import Info from './components/Info.vue'
+import Cart from './components/Cart.vue'
+
+export default {
+    components: {
+        Header,
+        TemporalRouting,
+        Register,
+        Login,
+        Listing,
+        Info,
+        Cart
+    },
+    data() {
+        return {
+            show: {
+                showRegister: false,
+                showLogin: false,
+                showListing: false,
+                showInfo: false,
+                showCart: false
+            }
+        }
+    },
+    created() {},
+    methods: {
+        toggleShow(component) {
+			for (const show in this.show) {
+				if (show === component) this.show[show] = !this.show[show]
+				else this.show[show] = false
+			}
+            
+        },
+		logElements() {
+			console.log(this.$root)
+		}
+    },
+    computed: {}
+}
+</script>
+
+<template>
+    <Header></Header>
+    <div class="main">
+		<button @click="logElements">Log</button>
+        <TemporalRouting :toggleShow="toggleShow"></TemporalRouting>
+        <hr />
+        <div v-show="show.showRegister">
+            <Register></Register>
+            <hr />
+        </div>
+        <div v-show="show.showLogin">
+            <Login></Login>
+            <hr />
+        </div>
+        <div v-show="show.showListing">
+            <Listing></Listing>
+            <hr />
+        </div>
+        <div v-show="show.showInfo">
+            <Info></Info>
+            <hr />
+        </div>
+        <div v-show="show.showCart">
+            <Cart></Cart>
+            <hr />
+        </div>
+    </div>
+</template>
+
+<style scoped></style>

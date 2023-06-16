@@ -1,0 +1,14 @@
+body {
+	background: whitesmoke;
+}
+
+ul {
+	list-style: none;
+}
+
+.main {
+	background: silver;
+	height: 100vh;
+	margin: 0 auto;
+	padding-top: 10px;
+}
