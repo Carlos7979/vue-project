@@ -1,7 +1,7 @@
 <script >
 	export default {
 	name: 'Listing',
-	componentes: {},
+	components: {},
 	props: {},
 	data () {
 		return {}

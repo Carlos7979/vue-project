@@ -1,7 +1,7 @@
 <script >
 	export default {
 	name: 'Login',
-	componentes: {},
+	components: {},
 	props: {},
 	data () {
 		return {}

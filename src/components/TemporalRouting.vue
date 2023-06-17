@@ -1,7 +1,7 @@
 <script>
 export default {
     name: 'TemporalRouting',
-    componentes: {},
+    components: {},
     props: {
 		toggleShow: {
 			type: Function

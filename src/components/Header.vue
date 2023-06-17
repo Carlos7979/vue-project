@@ -2,7 +2,7 @@
 	import vueImg from './icons/vue.png'
 	import coderImg from './icons/coderhouse.png'
 	export default {
-	componentes: {},
+	components: {},
 	props: {},
 	data () {
 		return {

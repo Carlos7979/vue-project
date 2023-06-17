@@ -1,7 +1,7 @@
 <script >
 	export default {
 	name: 'Cart',
-	componentes: {},
+	components: {},
 	props: {},
 	data () {
 		return {}
