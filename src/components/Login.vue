@@ -74,6 +74,7 @@ export default {
                     users = JSON.parse(users)
                     const user = users.find(e => e.user === this.form.user)
                     delete user.password
+					user.route = 'showListing'
                     Swal.fire({
                         icon: 'success',
                         title: 'Ingreso exitoso',

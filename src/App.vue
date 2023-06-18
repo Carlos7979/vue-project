@@ -28,7 +28,15 @@ export default {
             }
         }
     },
-    created() {},
+    created() {
+		let user = sessionStorage.getItem('user')
+		if (user) {
+			user = JSON.parse(user)
+			this.toggleShow(user.route)
+		} else {
+			this.toggleShow('showLogin')
+		}
+	},
     methods: {
         toggleShow(component) {
 			for (const show in this.show) {

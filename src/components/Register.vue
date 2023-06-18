@@ -98,6 +98,7 @@ export default {
 					}
 					this.isSubmitted = false
 					delete user.password
+					user.route = 'showListing'
 					sessionStorage.setItem('user', JSON.stringify(user))
 					this.handleShowListing()
                 })
