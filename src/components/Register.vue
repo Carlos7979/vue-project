@@ -29,6 +29,8 @@ export default {
 			if (this.isSubmitted && this.validate()) this.error = false 
         },
         handleShowLogin() {
+			const form = this.$refs.form
+			form.reset()
             this.$emit('showLogin', 'showLogin')
         },
 		handleShowListing() {
