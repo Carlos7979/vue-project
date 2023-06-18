@@ -36,42 +36,40 @@ export default {
 				else this.show[show] = false
 			}
             
-        },
-		logElements() {
-			console.log(this.$root)
-		}
+        }
     },
     computed: {}
 }
 </script>
 
 <template>
-    <Header></Header>
-    <div class="main">
-		<button @click="logElements">Log</button>
-        <TemporalRouting :toggleShow="toggleShow"></TemporalRouting>
-        <hr />
-        <div v-show="show.showRegister">
-            <Register></Register>
-            <hr />
-        </div>
-        <div v-show="show.showLogin">
-            <Login></Login>
-            <hr />
-        </div>
-        <div v-show="show.showListing">
-            <Listing></Listing>
-            <hr />
-        </div>
-        <div v-show="show.showInfo">
-            <Info></Info>
-            <hr />
-        </div>
-        <div v-show="show.showCart">
-            <Cart></Cart>
-            <hr />
-        </div>
-    </div>
+    <div >
+		<Header></Header>
+		<div class="main">
+			<TemporalRouting :toggleShow="toggleShow"></TemporalRouting>
+			<hr />
+			<div v-show="show.showRegister">
+				<Register @showLogin="toggleShow" @showListing="toggleShow"></Register>
+				<hr />
+			</div>
+			<div v-show="show.showLogin">
+				<Login></Login>
+				<hr />
+			</div>
+			<div v-show="show.showListing">
+				<Listing></Listing>
+				<hr />
+			</div>
+			<div v-show="show.showInfo">
+				<Info></Info>
+				<hr />
+			</div>
+			<div v-show="show.showCart">
+				<Cart></Cart>
+				<hr />
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped></style>
