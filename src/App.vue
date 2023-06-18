@@ -53,7 +53,7 @@ export default {
 				<hr />
 			</div>
 			<div v-show="show.showLogin">
-				<Login></Login>
+				<Login @showRegister="toggleShow" @showListing="toggleShow"></Login>
 				<hr />
 			</div>
 			<div v-show="show.showListing">
