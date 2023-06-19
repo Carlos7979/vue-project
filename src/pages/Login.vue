@@ -1,5 +1,5 @@
 <script>
-import Input from './Input.vue'
+import Input from '../components/Input.vue'
 import Swal from 'sweetalert2'
 
 export default {
@@ -25,8 +25,8 @@ export default {
             if (this.isSubmitted && this.validate()) this.error = false
         },
         handleShowRegister() {
-			const form = this.$refs.form
-			form.reset()
+            const form = this.$refs.form
+            form.reset()
             this.$emit('showRegister', 'showRegister')
         },
         handleShowListing() {
@@ -74,7 +74,7 @@ export default {
                     users = JSON.parse(users)
                     const user = users.find(e => e.user === this.form.user)
                     delete user.password
-					user.route = 'showListing'
+                    user.route = 'showListing'
                     Swal.fire({
                         icon: 'success',
                         title: 'Ingreso exitoso',

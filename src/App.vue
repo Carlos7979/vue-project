@@ -1,11 +1,11 @@
 <script>
 import Header from './components/Header.vue'
 import TemporalRouting from './components/TemporalRouting.vue'
-import Register from './components/Register.vue'
-import Login from './components/Login.vue'
-import Listing from './components/Listing.vue'
-import Info from './components/Info.vue'
-import Cart from './components/Cart.vue'
+import Register from './pages/Register.vue'
+import Login from './pages/Login.vue'
+import Listing from './pages/Listing.vue'
+import Info from './pages/Info.vue'
+import Cart from './pages/Cart.vue'
 
 export default {
     components: {

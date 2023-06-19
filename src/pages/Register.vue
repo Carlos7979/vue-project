@@ -1,5 +1,5 @@
 <script>
-import Input from './Input.vue'
+import Input from '../components/Input.vue'
 import Swal from 'sweetalert2'
 
 export default {
@@ -19,21 +19,21 @@ export default {
                 password: '',
                 confirmPassword: ''
             },
-			isSubmitted: false,
-			error: false
+            isSubmitted: false,
+            error: false
         }
     },
     methods: {
         handleInput([name, value]) {
             this.form[name] = value
-			if (this.isSubmitted && this.validate()) this.error = false 
+            if (this.isSubmitted && this.validate()) this.error = false
         },
         handleShowLogin() {
-			const form = this.$refs.form
-			form.reset()
+            const form = this.$refs.form
+            form.reset()
             this.$emit('showLogin', 'showLogin')
         },
-		handleShowListing() {
+        handleShowListing() {
             this.$emit('showListing', 'showListing')
         },
         validate() {
@@ -41,30 +41,30 @@ export default {
             for (const key in this.form) {
                 if (!this.form[key]) {
                     error.innerText = 'Todos los campos son obligatorios'
-					if (!this.error) this.error = true
-					return false
+                    if (!this.error) this.error = true
+                    return false
                 }
             }
             let users = localStorage.getItem('users')
             if (users) {
                 users = JSON.parse(users)
                 if (users.some(e => e.email === this.form.email)) {
-					error.innerText = 'El correo electrónico ya se encuentra registrado'
-					if (!this.error) this.error = true
-					return false
-				}
-				if (users.some(e => e.user === this.form.user)) {
-					error.innerText = 'El nombre de usuario ya se encuentra registrado'
-					if (!this.error) this.error = true
-					return false
-				}
+                    error.innerText = 'El correo electrónico ya se encuentra registrado'
+                    if (!this.error) this.error = true
+                    return false
+                }
+                if (users.some(e => e.user === this.form.user)) {
+                    error.innerText = 'El nombre de usuario ya se encuentra registrado'
+                    if (!this.error) this.error = true
+                    return false
+                }
             }
             if (this.form.password !== this.form.confirmPassword) {
                 error.innerText = 'Las contraseñas no coinciden'
                 if (!this.error) this.error = true
-				return false
+                return false
             }
-			error.innerText = ''
+            error.innerText = ''
             return true
         }
     },
@@ -72,13 +72,13 @@ export default {
         const form = this.$refs.form
         form.addEventListener('submit', async e => {
             e.preventDefault()
-			this.isSubmitted = true
+            this.isSubmitted = true
             if (this.validate()) {
                 let users = localStorage.getItem('users')
-				const user = {
-					...this.form
-				}
-				delete user.confirmPassword
+                const user = {
+                    ...this.form
+                }
+                delete user.confirmPassword
                 if (users) {
                     users = JSON.parse(users)
                     users.push(user)
@@ -93,14 +93,14 @@ export default {
                     timer: 1500
                 }).then(() => {
                     e.target.reset()
-					for (const key in this.form) {
-						this.form[key] = ''
-					}
-					this.isSubmitted = false
-					delete user.password
-					user.route = 'showListing'
-					sessionStorage.setItem('user', JSON.stringify(user))
-					this.handleShowListing()
+                    for (const key in this.form) {
+                        this.form[key] = ''
+                    }
+                    this.isSubmitted = false
+                    delete user.password
+                    user.route = 'showListing'
+                    sessionStorage.setItem('user', JSON.stringify(user))
+                    this.handleShowListing()
                 })
             }
         })
@@ -127,7 +127,7 @@ export default {
                 @input="handleInput"
             ></Input>
             <button class="btn form-control text-bg-dark p-3">REGÍSTRATE</button>
-            <div ref="error" :class="error ? 'error' :''"></div>
+            <div ref="error" :class="error ? 'error' : ''"></div>
         </form>
         <button class="btn form-control text-bg-primary mt-2" @click="handleShowLogin">
             Ingresar
@@ -156,11 +156,10 @@ export default {
 }
 
 .error {
-	background-color: rgb(250, 129, 92);
+    background-color: rgb(250, 129, 92);
     color: white;
     animation: status 4s ease forwards;
-	padding: 5px;
-	border-radius: 5px;
+    padding: 5px;
+    border-radius: 5px;
 }
-
 </style>
