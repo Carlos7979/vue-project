@@ -1,6 +1,7 @@
 <script>
 import Header from './components/Header.vue'
 import TemporalRouting from './components/TemporalRouting.vue'
+import Nav from './components/Nav.vue'
 import Register from './pages/Register.vue'
 import Login from './pages/Login.vue'
 import Listing from './pages/Listing.vue'
@@ -11,6 +12,7 @@ export default {
     components: {
         Header,
         TemporalRouting,
+        Nav,
         Register,
         Login,
         Listing,
@@ -29,21 +31,20 @@ export default {
         }
     },
     created() {
-		let user = sessionStorage.getItem('user')
-		if (user) {
-			user = JSON.parse(user)
-			this.toggleShow(user.route)
-		} else {
-			this.toggleShow('showLogin')
-		}
-	},
+        let user = sessionStorage.getItem('user')
+        if (user) {
+            user = JSON.parse(user)
+            this.toggleShow(user.route)
+        } else {
+            this.toggleShow('showLogin')
+        }
+    },
     methods: {
         toggleShow(component) {
-			for (const show in this.show) {
-				if (show === component) this.show[show] = !this.show[show]
-				else this.show[show] = false
-			}
-            
+            for (const show in this.show) {
+                if (show === component) this.show[show] = !this.show[show]
+                else this.show[show] = false
+            }
         }
     },
     computed: {}
@@ -51,33 +52,42 @@ export default {
 </script>
 
 <template>
-    <div >
-		<Header></Header>
-		<div class="main">
-			<TemporalRouting :toggleShow="toggleShow"></TemporalRouting>
-			<hr />
-			<div v-show="show.showRegister">
-				<Register @showLogin="toggleShow" @showListing="toggleShow"></Register>
-				<hr />
-			</div>
-			<div v-show="show.showLogin">
-				<Login @showRegister="toggleShow" @showListing="toggleShow"></Login>
-				<hr />
-			</div>
-			<div v-show="show.showListing">
-				<Listing></Listing>
-				<hr />
-			</div>
-			<div v-show="show.showInfo">
-				<Info></Info>
-				<hr />
-			</div>
-			<div v-show="show.showCart">
-				<Cart></Cart>
-				<hr />
-			</div>
-		</div>
-	</div>
+    <div>
+        <Header></Header>
+        <div class="main">
+            <TemporalRouting :toggleShow="toggleShow"></TemporalRouting>
+            <hr />
+            <div v-show="!(show.showRegister || show.showLogin)">
+                <Nav
+                    @showListing="toggleShow"
+                    @showCart="toggleShow"
+                    @showLogin="toggleShow"
+                    @showInfo="toggleShow"
+                    :show="show"
+                ></Nav>
+            </div>
+            <div v-show="show.showRegister">
+                <Register @showLogin="toggleShow" @showListing="toggleShow"></Register>
+                <hr />
+            </div>
+            <div v-show="show.showLogin">
+                <Login @showRegister="toggleShow" @showListing="toggleShow"></Login>
+                <hr />
+            </div>
+            <div v-show="show.showListing">
+                <Listing></Listing>
+                <hr />
+            </div>
+            <div v-show="show.showInfo">
+                <Info></Info>
+                <hr />
+            </div>
+            <div v-show="show.showCart">
+                <Cart></Cart>
+                <hr />
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped></style>

@@ -3,7 +3,7 @@ import Input from '../components/Input.vue'
 import Swal from 'sweetalert2'
 
 export default {
-    name: 'Register',
+    name: 'Login',
     emits: ['showRegister', 'showListing'],
     components: {
         Input
@@ -42,15 +42,17 @@ export default {
                 }
             }
             let users = localStorage.getItem('users')
+			let user
             if (users) {
                 users = JSON.parse(users)
-                if (!users.some(e => e.password === this.form.password)) {
-                    error.innerText = 'El usuario o contraseña es incorrecto'
-                    if (!this.error) this.error = true
-                    return false
-                }
-                if (users.some(e => e.user === this.form.user)) {
-                    error.innerText = 'El usuario o contraseña es incorrecto'
+				user = users.find(e => e.user === this.form.user)
+				if (!user) {
+					error.innerText = 'El usuario o contraseña es incorrecto'
+					if (!this.error) this.error = true
+					return false
+				}
+                if (user.password !== this.form.password) {
+					error.innerText = 'El usuario o contraseña es incorrecto'
                     if (!this.error) this.error = true
                     return false
                 }
@@ -60,7 +62,7 @@ export default {
                 return false
             }
             error.innerText = ''
-            return true
+            return user
         }
     },
     mounted() {
@@ -68,28 +70,24 @@ export default {
         form.addEventListener('submit', async e => {
             e.preventDefault()
             this.isSubmitted = true
-            if (this.validate()) {
-                let users = localStorage.getItem('users')
-                if (users) {
-                    users = JSON.parse(users)
-                    const user = users.find(e => e.user === this.form.user)
-                    delete user.password
-                    user.route = 'showListing'
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Ingreso exitoso',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        e.target.reset()
-                        for (const key in this.form) {
-                            this.form[key] = ''
-                        }
-                        this.isSubmitted = false
-                        sessionStorage.setItem('user', JSON.stringify(user))
-                        this.handleShowListing()
-                    })
-                }
+			const user = this.validate()
+            if (user) {
+				delete user.password
+				user.route = 'showListing'
+				Swal.fire({
+					icon: 'success',
+					title: 'Ingreso exitoso',
+					showConfirmButton: false,
+					timer: 1500
+				}).then(() => {
+					e.target.reset()
+					for (const key in this.form) {
+						this.form[key] = ''
+					}
+					this.isSubmitted = false
+					sessionStorage.setItem('user', JSON.stringify(user))
+					this.handleShowListing()
+				})
             }
         })
     }
