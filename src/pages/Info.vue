@@ -1,23 +1,28 @@
 <script>
 import Card from '../components/Card.vue'
 export default {
-    name: 'Listing',
-    emits: ['showInfo'],
+    name: 'Info',
+    emits: ['showInfo', 'handleQuantity'],
     components: {
         Card
     },
     props: {
-        product: Object
+        product: Object,
+		quantity: Number
     },
     data() {
         return {}
     },
-    methods: {}
+    methods: {
+		handleQuantity(data) {
+			this.$emit('handleQuantity', data)
+		}
+	}
 }
 </script>
 <template>
     <div class="listing">
-        <Card :product="product" :detail="true"></Card>
+        <Card :product="product" :detail="true" :quantity="quantity" @quantity="handleQuantity"></Card>
     </div>
 </template>
 <style scoped>

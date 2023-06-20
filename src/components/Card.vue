@@ -3,7 +3,7 @@ const icons = await import('./icons/card')
 
 export default {
     name: 'Card',
-    emits: ['showInfo'],
+    emits: ['showInfo', 'quantity', 'quantity'],
     components: {
         ...icons
     },
@@ -13,12 +13,15 @@ export default {
 		detail: {
 			type: Boolean,
 			default: false
+		},
+		quantity: {
+			type: Number,
+			default: 0
 		}
     },
     data() {
         return {
             fav: false,
-            quantity: 0
         }
     },
     methods: {
@@ -26,10 +29,11 @@ export default {
             this.fav = !this.fav
         },
         addQuantity() {
-            this.quantity++
+			console.log(this.quantity);
+			this.$emit('quantity', [this.quantity + 1, this.product.id - 1 ])
         },
         removeQuantity() {
-            if (this.quantity > 0) this.quantity--
+            if (this.quantity > 0) this.$emit('quantity', [this.quantity - 1, this.product.id - 1])
         },
         handleShowInfo() {
 			if (this.detail) return
