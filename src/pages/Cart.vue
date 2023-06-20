@@ -2,6 +2,7 @@
 import Card from '../components/Card.vue'
 import CartMinusIconVue from '../components/icons/card/CartMinusIcon.vue'
 import CartPlusIcon from '../components/icons/card/CartPlusIcon.vue'
+import Trash from '../components/icons/card/Trash.vue'
 
 export default {
     name: 'Cart',
@@ -9,7 +10,8 @@ export default {
     components: {
         Card,
         CartMinusIconVue,
-        CartPlusIcon
+        CartPlusIcon,
+		Trash
     },
     props: {
         products: Array,
@@ -83,7 +85,12 @@ export default {
                 <div class="cart-element">
                     {{ product.quantity * products[product.productIndex].price }}
                 </div>
-                <div class="cart-element">Quitar</div>
+                <div
+					class="cart-element click-cart trash"
+					@click="() => handleQuantity([0, product.productIndex])"
+				>
+					<Trash />
+				</div>
             </div>
         </div>
         <div class="cart-elements-header">
@@ -142,5 +149,9 @@ export default {
     position: relative;
     top: 1px;
     left: 1px;
+}
+
+.trash {
+	color: red;
 }
 </style>
