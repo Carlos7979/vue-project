@@ -8,7 +8,12 @@ export default {
 	},
     data() {
         return {
-            name: ''
+            name: '',
+			title: {
+				showListing: 'Productos',
+				showInfo: 'Detalle del producto',
+				showCart: 'Carrito de compras'
+			}
         }
     },
     created() {
@@ -49,7 +54,8 @@ export default {
 </script>
 <template>
     <div class="nav">
-        <div id="welcome">Bienvenido(a) {{ name }}</div>
+        <div id="welcome" :class="show === 'showInfo' && 'welcome'">Bienvenido(a) {{ name }}</div>
+		<h4 class="title">{{ title[show] }}</h4>
         <div class="nav-routes">
 			<div class="route" v-show="show !== 'showListing'" @click="handleShowListing">Ir a productos</div>
 			<div class="route" v-show="show !== 'showCart'" @click="handleShowCart">Ir a carrito</div>
@@ -61,6 +67,7 @@ export default {
 .nav {
     display: flex;
     justify-content: space-between;
+	align-items: center;
     border: 1px solid;
 	border-radius: 5px;
 	background-color: aliceblue;
@@ -70,6 +77,14 @@ export default {
 #welcome {
 	padding: 5px;
 	font-weight: 600;
+}
+
+.welcome {
+	width: 30%;
+}
+
+.title {
+	margin-bottom: 0;
 }
 
 .nav-routes {
