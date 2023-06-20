@@ -59,7 +59,7 @@ export default {
             @click="handleShowInfo"
         />
         <div class="card-body">
-            <h5 class="card-title"></h5>
+            <h5 class="card-title">{{ product.title }}</h5>
             <p class="card-text">
                 {{ detail ? product.largeDescription : product.shortDescription }}
             </p>
