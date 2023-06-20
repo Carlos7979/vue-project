@@ -55,7 +55,8 @@ export default {
         if (user) {
             user = JSON.parse(user)
             if (user.hasOwnProperty('productIndex')) this.productIndex = user.productIndex
-            this.handleShow(user.route)
+            if (user.hasOwnProperty('cart')) this.cart = user.cart
+			this.handleShow(user.route)
         } else {
             this.handleShow('showLogin')
         }
@@ -69,6 +70,7 @@ export default {
                 user = JSON.parse(user)
                 user.route = component
                 user.productIndex = this.productIndex
+				user.cart = this.cart
                 sessionStorage.setItem('user', JSON.stringify(user))
             }
         },
@@ -81,8 +83,14 @@ export default {
             const quantity = data[0]
             const productIndex = data[1]
             const cartIndex = this.cart.findIndex(e => productIndex === e.productIndex)
-            if (this.cart.length === 0 || cartIndex === -1) return this.cart.push({ quantity, productIndex })
-			this.cart[cartIndex].quantity = quantity
+            if (this.cart.length === 0 || cartIndex === -1) this.cart.push({ quantity, productIndex })
+			else this.cart[cartIndex].quantity = quantity
+			let user = sessionStorage.getItem('user')
+            if (user) {
+                user = JSON.parse(user)
+				user.cart = this.cart
+                sessionStorage.setItem('user', JSON.stringify(user))
+            }
         },
         sendProductQuantity() {
             console.log(this.cart.length === 0)
