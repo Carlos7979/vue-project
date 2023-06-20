@@ -2,45 +2,61 @@
 import Card from '../components/Card.vue'
 export default {
     name: 'Listing',
-	emits: ['showInfo', 'handleQuantity'],
+    emits: ['showInfo', 'handleQuantity', 'handleFav'],
     components: {
         Card
     },
     props: {
         products: Array,
-		cart: Array
+        cart: Array,
+        fav: Array
     },
     data() {
         return {}
-    }, methods: {
-		handleShowInfo(data) {
+    },
+    methods: {
+        handleShowInfo(data) {
             this.$emit('showInfo', data)
         },
-		sendQuantity(index) {
-			if (this.cart.length === 0) return 0
+        sendQuantity(index) {
+            if (this.cart.length === 0) return 0
             const cartIndex = this.cart.findIndex(e => index === e.productIndex)
-			if (cartIndex === -1) return 0
-			return this.cart[cartIndex].quantity
+            if (cartIndex === -1) return 0
+            return this.cart[cartIndex].quantity
+        },
+		isFav(index) {
+			if (this.fav.includes(index)) return true
+			return false
 		},
-		handleQuantity(data) {
-			this.$emit('handleQuantity', data)
-		}
-	}
+        handleQuantity(data) {
+            this.$emit('handleQuantity', data)
+        },
+        handleFav(data) {
+            this.$emit('handleFav', data)
+        }
+    }
 }
 </script>
 <template>
     <div class="listing">
-		<div v-for="(product, i) of products" :key="`${i}-product`">
-			<Card :product="product" :index="i" @showInfo="handleShowInfo" :quantity="sendQuantity(i)" @quantity="handleQuantity"></Card>
-		</div>
-	</div>
+        <div v-for="(product, i) of products" :key="`${i}-product`">
+            <Card
+                :product="product"
+				:fav="isFav(i)"
+                @showInfo="handleShowInfo"
+                :quantity="sendQuantity(i)"
+                @quantity="handleQuantity"
+				@fav="handleFav"
+            ></Card>
+        </div>
+    </div>
 </template>
 <style scoped>
 .listing {
     margin: 5px auto;
     display: flex;
-	justify-content: center;
-	padding: 0 10px;
-	flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 10px;
+    flex-wrap: wrap;
 }
 </style>

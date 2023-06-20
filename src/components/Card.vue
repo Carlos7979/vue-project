@@ -3,13 +3,12 @@ const icons = await import('./icons/card')
 
 export default {
     name: 'Card',
-    emits: ['showInfo', 'quantity'],
+    emits: ['showInfo', 'quantity', 'fav'],
     components: {
         ...icons
     },
     props: {
         product: Object,
-        index: Number,
         detail: {
             type: Boolean,
             default: false
@@ -17,16 +16,18 @@ export default {
         quantity: {
             type: Number,
             default: 0
-        }
+        },
+		fav: {
+			type: Boolean,
+			default: false
+		}
     },
     data() {
-        return {
-            fav: false
-        }
+        return {}
     },
     methods: {
         toggleFav() {
-            this.fav = !this.fav
+            this.$emit('fav', [!this.fav, this.product.id - 1])
         },
         addQuantity() {
             this.$emit('quantity', [this.quantity + 1, this.product.id - 1])
@@ -39,7 +40,7 @@ export default {
 		},
         handleShowInfo() {
             if (this.detail) return
-            this.$emit('showInfo', ['showInfo', this.index])
+            this.$emit('showInfo', ['showInfo', this.product.id - 1])
         }
     }
 }

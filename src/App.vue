@@ -15,6 +15,7 @@ export default {
         return {
             show: 'showLogin',
             cart: [],
+			fav: [],
             productIndex: -1,
             products: [
                 {
@@ -56,6 +57,7 @@ export default {
             user = JSON.parse(user)
             if (user.hasOwnProperty('productIndex')) this.productIndex = user.productIndex
             if (user.hasOwnProperty('cart')) this.cart = user.cart
+			if (user.hasOwnProperty('fav')) this.fav = user.fav
             this.handleShow(user.route)
         } else {
             this.handleShow('showLogin')
@@ -84,7 +86,8 @@ export default {
             const cartIndex = this.cart.findIndex(e => productIndex === e.productIndex)
             if (this.cart.length === 0 || cartIndex === -1)
                 this.cart.push({ quantity, productIndex })
-            else this.cart[cartIndex].quantity = quantity
+            else if (quantity === 0) this.cart.splice(cartIndex, 1)
+			else this.cart[cartIndex].quantity = quantity
             let user = sessionStorage.getItem('user')
             if (user) {
                 user = JSON.parse(user)
@@ -92,14 +95,34 @@ export default {
                 sessionStorage.setItem('user', JSON.stringify(user))
             }
         },
-        sendProductQuantity() {
+		handleProductFav(data) {
+            const fav = data[0]
+			const productIndex = data[1]
+			if (fav) this.fav.push(productIndex)
+			else {
+				const favIndex = this.fav.findIndex(e => productIndex === e)
+				this.fav.splice(favIndex, 1)
+			}
+            let user = sessionStorage.getItem('user')
+            if (user) {
+                user = JSON.parse(user)
+                user.fav = this.fav
+                sessionStorage.setItem('user', JSON.stringify(user))
+            }
+        }
+    },
+    computed: {
+		productQuantity() {
             if (this.productIndex === -1 || this.cart.length === 0) return 0
             const cartIndex = this.cart.findIndex(e => this.productIndex === e.productIndex)
             if (cartIndex === -1) return 0
             return this.cart[cartIndex].quantity
-        }
-    },
-    computed: {}
+        },
+		isFav() {
+			if (this.fav.includes(this.productIndex)) return true
+			return false
+		}
+	}
 }
 </script>
 
@@ -107,7 +130,7 @@ export default {
     <div>
         <Header></Header>
         <div class="main">
-            <TemporalRouting :handleShow="handleShow"></TemporalRouting>
+            <!-- <TemporalRouting :handleShow="handleShow"></TemporalRouting> -->
             <hr />
             <div v-show="!(show === 'showRegister' || show === 'showLogin')">
                 <Nav
@@ -130,16 +153,20 @@ export default {
                 <Listing
                     @showInfo="handleInfo"
                     :products="products"
-                    :cart="cart"
+                    :fav="fav"
+					:cart="cart"
                     @handleQuantity="handleProductQuantity"
+					@handleFav="handleProductFav"
                 ></Listing>
                 <hr />
             </div>
             <div v-show="show === 'showInfo'">
                 <Info
                     :product="productIndex === -1 ? {} : products[productIndex]"
-                    @handleQuantity="handleProductQuantity"
-                    :quantity="sendProductQuantity()"
+                    :fav="isFav"
+					@handleQuantity="handleProductQuantity"
+					@handleFav="handleProductFav"
+                    :quantity="productQuantity"
                 ></Info>
                 <hr />
             </div>

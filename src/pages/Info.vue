@@ -2,27 +2,38 @@
 import Card from '../components/Card.vue'
 export default {
     name: 'Info',
-    emits: ['showInfo', 'handleQuantity'],
+    emits: ['showInfo', 'handleQuantity', 'handleFav'],
     components: {
         Card
     },
     props: {
         product: Object,
-		quantity: Number
+        quantity: Number,
+        fav: Boolean
     },
     data() {
         return {}
     },
     methods: {
-		handleQuantity(data) {
-			this.$emit('handleQuantity', data)
-		}
-	}
+        handleQuantity(data) {
+            this.$emit('handleQuantity', data)
+        },
+		handleFav(data) {
+            this.$emit('handleFav', data)
+        }
+    }
 }
 </script>
 <template>
     <div class="listing">
-        <Card :product="product" :detail="true" :quantity="quantity" @quantity="handleQuantity"></Card>
+        <Card
+            :product="product"
+            :detail="true"
+			:fav="fav"
+            :quantity="quantity"
+            @quantity="handleQuantity"
+			@fav="handleFav"
+        ></Card>
     </div>
 </template>
 <style scoped>
