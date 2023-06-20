@@ -1,11 +1,11 @@
 <script>
-const icon = await import('./icons/form')
+const icons = await import('./icons/form')
 // const Icon = icon['Email']
 export default {
     name: 'Input',
     emits: ['input'],
     components: {
-		...icon
+		...icons
     },
     props: {
         type: String,
