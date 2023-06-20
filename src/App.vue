@@ -56,7 +56,7 @@ export default {
             user = JSON.parse(user)
             if (user.hasOwnProperty('productIndex')) this.productIndex = user.productIndex
             if (user.hasOwnProperty('cart')) this.cart = user.cart
-			this.handleShow(user.route)
+            this.handleShow(user.route)
         } else {
             this.handleShow('showLogin')
         }
@@ -70,7 +70,7 @@ export default {
                 user = JSON.parse(user)
                 user.route = component
                 user.productIndex = this.productIndex
-				user.cart = this.cart
+                user.cart = this.cart
                 sessionStorage.setItem('user', JSON.stringify(user))
             }
         },
@@ -79,25 +79,22 @@ export default {
             this.handleShow(data[0])
         },
         handleProductQuantity(data) {
-            console.log(data)
             const quantity = data[0]
             const productIndex = data[1]
             const cartIndex = this.cart.findIndex(e => productIndex === e.productIndex)
-            if (this.cart.length === 0 || cartIndex === -1) this.cart.push({ quantity, productIndex })
-			else this.cart[cartIndex].quantity = quantity
-			let user = sessionStorage.getItem('user')
+            if (this.cart.length === 0 || cartIndex === -1)
+                this.cart.push({ quantity, productIndex })
+            else this.cart[cartIndex].quantity = quantity
+            let user = sessionStorage.getItem('user')
             if (user) {
                 user = JSON.parse(user)
-				user.cart = this.cart
+                user.cart = this.cart
                 sessionStorage.setItem('user', JSON.stringify(user))
             }
         },
         sendProductQuantity() {
-            console.log(this.cart.length === 0)
             if (this.productIndex === -1 || this.cart.length === 0) return 0
-            console.log('here')
             const cartIndex = this.cart.findIndex(e => this.productIndex === e.productIndex)
-            console.log(cartIndex)
             if (cartIndex === -1) return 0
             return this.cart[cartIndex].quantity
         }
@@ -147,7 +144,12 @@ export default {
                 <hr />
             </div>
             <div v-show="show === 'showCart'">
-                <Cart></Cart>
+                <Cart
+                    @showInfo="handleInfo"
+                    :products="products"
+                    :cart="cart"
+                    @handleQuantity="handleProductQuantity"
+                ></Cart>
                 <hr />
             </div>
         </div>

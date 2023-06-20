@@ -3,7 +3,7 @@ const icons = await import('./icons/card')
 
 export default {
     name: 'Card',
-    emits: ['showInfo', 'quantity', 'quantity'],
+    emits: ['showInfo', 'quantity'],
     components: {
         ...icons
     },
@@ -29,7 +29,6 @@ export default {
             this.fav = !this.fav
         },
         addQuantity() {
-			console.log(this.quantity);
 			this.$emit('quantity', [this.quantity + 1, this.product.id - 1 ])
         },
         removeQuantity() {
