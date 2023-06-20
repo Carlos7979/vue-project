@@ -9,7 +9,11 @@ export default {
     },
     props: {
         product: Object,
-        index: Number
+        index: Number,
+		detail: {
+			type: Boolean,
+			default: false
+		}
     },
     data() {
         return {
@@ -28,29 +32,29 @@ export default {
             if (this.quantity > 0) this.quantity--
         },
         handleShowInfo() {
+			if (this.detail) return
             this.$emit('showInfo', ['showInfo', this.index])
         }
     }
 }
 </script>
 <template>
-    <div class="card" style="width: 18rem">
+    <div :class="detail ? 'card detail': 'card'">
         <div class="heart" @click="toggleFav">
             <div v-show="!fav"><Heart /></div>
             <div v-show="fav" class="fav"><HeartSolid /></div>
         </div>
         <img
             :src="product.img"
-            class="card-img-top card-image"
+            :class="detail ? 'card-img-top' : 'card-img-top card-image'"
             :alt="product.title"
-            height="200"
-            width="auto"
+            :height="!detail ? '200': ''"
             @click="handleShowInfo"
         />
         <div class="card-body">
             <h5 class="card-title"></h5>
             <p class="card-text">
-                {{ product.shortDescription }}
+                {{detail ? product.largeDescription : product.shortDescription }}
             </p>
         </div>
         <ul class="list-group list-group-flush">
@@ -75,6 +79,12 @@ export default {
 .card {
     margin: 5px;
     position: relative;
+	width: 18rem;
+}
+
+.detail {
+	min-width: 36rem;
+	height: auto;
 }
 
 .card-image {

@@ -2,22 +2,14 @@
 import Header from './components/Header.vue'
 import TemporalRouting from './components/TemporalRouting.vue'
 import Nav from './components/Nav.vue'
-import Register from './pages/Register.vue'
-import Login from './pages/Login.vue'
-import Listing from './pages/Listing.vue'
-import Info from './pages/Info.vue'
-import Cart from './pages/Cart.vue'
+const pages = await import('./pages')
 
 export default {
     components: {
         Header,
         TemporalRouting,
         Nav,
-        Register,
-        Login,
-        Listing,
-        Info,
-        Cart
+        ...pages
     },
     data() {
         return {
@@ -29,7 +21,7 @@ export default {
                 showCart: false
             },
             user: {},
-			productIndex: null,
+			productIndex: -1,
             products: [
                 {
                     title: 'Pie de manzana',
@@ -115,7 +107,7 @@ export default {
                 <hr />
             </div>
             <div v-show="show.showInfo">
-                <Info :product="products[productIndex]"></Info>
+                <Info :product="productIndex === -1 ? {} : products[productIndex]"></Info>
                 <hr />
             </div>
             <div v-show="show.showCart">

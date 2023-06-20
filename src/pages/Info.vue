@@ -1,32 +1,31 @@
 <script>
+import Card from '../components/Card.vue'
 export default {
-    name: 'Info',
-    components: {},
-    props: {},
+    name: 'Listing',
+    emits: ['showInfo'],
+    components: {
+        Card
+    },
+    props: {
+        product: Object
+    },
     data() {
         return {}
-    }
+    },
+    methods: {}
 }
 </script>
 <template>
-    <div class="info-data">Info</div>
+    <div class="listing">
+        <Card :product="product" :detail="true"></Card>
+    </div>
 </template>
 <style scoped>
-.info-data {
-    width: max-content;
+.listing {
     margin: 5px auto;
     display: flex;
-}
-
-.info {
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-    line-height: 1.5;
-}
-
-.data {
-    padding-left: 0.5rem;
-    line-height: 1.5;
+    justify-content: center;
+    padding: 0 10px;
+    flex-wrap: wrap;
 }
 </style>
