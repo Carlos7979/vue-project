@@ -3,7 +3,7 @@ export default {
     name: 'TemporalRouting',
     components: {},
     props: {
-		toggleShow: {
+		handleShow: {
 			type: Function
 		}
 	},
@@ -14,11 +14,11 @@ export default {
 </script>
 <template>
     <div class="button-container">
-        <button class="btn btn-primary toggle" @click="toggleShow('showRegister')">Mostrar Registrarse</button>
-        <button class="btn btn-primary toggle" @click="toggleShow('showLogin')">Mostrar Ingresar</button>
-        <button class="btn btn-primary toggle" @click="toggleShow('showListing')">Mostrar Listado</button>
-        <button class="btn btn-primary toggle" @click="toggleShow('showInfo')">Mostrar Info</button>
-        <button class="btn btn-primary toggle" @click="toggleShow('showCart')">Mostrar Carrito</button>
+        <button class="btn btn-primary toggle" @click="handleShow('showRegister')">Mostrar Registrarse</button>
+        <button class="btn btn-primary toggle" @click="handleShow('showLogin')">Mostrar Ingresar</button>
+        <button class="btn btn-primary toggle" @click="handleShow('showListing')">Mostrar Listado</button>
+        <button class="btn btn-primary toggle" @click="handleShow('showInfo')">Mostrar Info</button>
+        <button class="btn btn-primary toggle" @click="handleShow('showCart')">Mostrar Carrito</button>
     </div>
 </template>
 <style scoped>

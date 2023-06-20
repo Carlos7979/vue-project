@@ -13,13 +13,7 @@ export default {
     },
     data() {
         return {
-            show: {
-                showRegister: false,
-                showLogin: false,
-                showListing: false,
-                showInfo: false,
-                showCart: false
-            },
+            show: 'showLogin',
             user: {},
 			productIndex: -1,
             products: [
@@ -57,21 +51,19 @@ export default {
         let user = sessionStorage.getItem('user')
         if (user) {
             user = JSON.parse(user)
-            this.toggleShow(user.route)
+            this.handleShow(user.route)
         } else {
-            this.toggleShow('showLogin')
+            this.handleShow('showLogin')
         }
     },
     methods: {
-        toggleShow(component) {
-            for (const show in this.show) {
-                if (show === component) this.show[show] = !this.show[show]
-                else this.show[show] = false
-            }
+        handleShow(component) {
+			if (component === 'showListing' && this.productIndex > 0) this.productIndex = -1
+            this.show = component
         },
 		handleInfo(data) {
 			this.productIndex = data[1]
-			this.toggleShow(data[0])
+			this.handleShow(data[0])
 
 		}
     },
@@ -83,34 +75,34 @@ export default {
     <div>
         <Header></Header>
         <div class="main">
-            <TemporalRouting :toggleShow="toggleShow"></TemporalRouting>
+            <TemporalRouting :handleShow="handleShow"></TemporalRouting>
             <hr />
-            <div v-show="!(show.showRegister || show.showLogin)">
+            <div v-show="!(show === 'showRegister' || show === 'showLogin')">
                 <Nav
-                    @showListing="toggleShow"
-                    @showCart="toggleShow"
-                    @showLogin="toggleShow"
-                    @showInfo="toggleShow"
+                    @showListing="handleShow"
+                    @showCart="handleShow"
+                    @showLogin="handleShow"
+                    @showInfo="handleShow"
                     :show="show"
                 ></Nav>
             </div>
-            <div v-show="show.showRegister">
-                <Register @showLogin="toggleShow" @showListing="toggleShow"></Register>
+            <div v-show="show === 'showRegister'">
+                <Register @showLogin="handleShow" @showListing="handleShow"></Register>
                 <hr />
             </div>
-            <div v-show="show.showLogin">
-                <Login @showRegister="toggleShow" @showListing="toggleShow"></Login>
+            <div v-show="show === 'showLogin'">
+                <Login @showRegister="handleShow" @showListing="handleShow"></Login>
                 <hr />
             </div>
-            <div v-show="show.showListing">
+            <div v-show="show === 'showListing'">
                 <Listing @showInfo="handleInfo" :products="products"></Listing>
                 <hr />
             </div>
-            <div v-show="show.showInfo">
+            <div v-show="show === 'showInfo'">
                 <Info :product="productIndex === -1 ? {} : products[productIndex]"></Info>
                 <hr />
             </div>
-            <div v-show="show.showCart">
+            <div v-show="show === 'showCart'">
                 <Cart></Cart>
                 <hr />
             </div>

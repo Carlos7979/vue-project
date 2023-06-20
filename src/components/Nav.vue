@@ -4,7 +4,7 @@ export default {
 	emits: ['showListing', 'showCart', 'showLogin', 'showInfo'],
     components: {},
     props: {
-		show: Object
+		show: String
 	},
     data() {
         return {
@@ -39,12 +39,9 @@ export default {
     <div class="nav">
         <div id="welcome">Bienvenido(a) {{ name }}</div>
         <div class="nav-routes">
-			<div class="route" v-show="!show.showListing" @click="handleShowListing">Ir a productos</div>
-			<div class="route" v-show="!show.showCart" @click="handleShowCart">Ir a carrito</div>
+			<div class="route" v-show="show !== 'showListing'" @click="handleShowListing">Ir a productos</div>
+			<div class="route" v-show="show !== 'showCart'" @click="handleShowCart">Ir a carrito</div>
 			<div class="route" @click="handleShowLogin">Cerrar sesión</div>
-			<!-- <Go route="Ir a productos"></Go>
-			<Go route="Ir a carrito"></Go>
-			<Go route="Cerrar sesión"></Go> -->
 		</div>
     </div>
 </template>

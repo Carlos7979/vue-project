@@ -39,7 +39,7 @@ export default {
 }
 </script>
 <template>
-    <div :class="detail ? 'card detail': 'card'">
+    <div v-show="Object.keys(product).length > 0" :class="detail ? 'card detail': 'card'">
         <div class="heart" @click="toggleFav">
             <div v-show="!fav"><Heart /></div>
             <div v-show="fav" class="fav"><HeartSolid /></div>
