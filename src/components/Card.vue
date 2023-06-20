@@ -72,7 +72,7 @@ export default {
 				<span>Vaciar</span>
             </div>
             <div class="add-cart-icons">
-                <div class="add-cart">
+                <div :class="detail ? 'add-cart add-cart-detail' : 'add-cart'">
                     <div :class="quantity ? 'click-cart' : 'disable'" @click="removeQuantity">
                         <div class="cart-element"><CartMinusIcon /></div>
                     </div>
@@ -136,6 +136,10 @@ export default {
 .add-cart {
 	display: flex;
 	width: 50%;
+}
+
+.add-cart-detail {
+	width: 23%;
 }
 
 .click-cart:active {
