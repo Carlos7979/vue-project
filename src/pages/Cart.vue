@@ -65,7 +65,7 @@ export default {
         </div>
         <div v-for="(product, i) of cart" :key="`${i}-product`">
             <div class="cart-elements" v-show="product.quantity > 0">
-                <div class="cart-element">{{ products[product.productIndex].title }}</div>
+                <div @click="() => handleShowInfo(['showInfo', product.productIndex])" class="cart-element route">{{ products[product.productIndex].title }}</div>
                 <div class="cart-element">{{ products[product.productIndex].price }}</div>
                 <div class="cart-element">
                     <span
@@ -134,6 +134,11 @@ export default {
 
 .t-header {
     font-weight: 600;
+}
+
+.route:hover {
+	cursor: pointer;
+	color: blue;
 }
 
 .quantity {
