@@ -72,7 +72,10 @@ export default {
                 user = JSON.parse(user)
                 user.route = component
                 user.productIndex = this.productIndex
-                user.cart = this.cart
+                if (user.hasOwnProperty('cart')) this.cart = user.cart
+				else user.cart = this.cart
+				if (user.hasOwnProperty('fav')) this.fav = user.fav
+				else user.fav = this.fav
                 sessionStorage.setItem('user', JSON.stringify(user))
             }
         },

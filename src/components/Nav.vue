@@ -29,6 +29,18 @@ export default {
 			this.$emit('showInfo', 'showInfo')
         },
 		handleLogout() {
+			let user = sessionStorage.getItem('user')
+			let users = localStorage.getItem('users')
+			if (users && user) {
+				user = JSON.parse(user)
+				users = JSON.parse(users)
+				const userIndex = users.findIndex(e => e.user === user.user)
+				if (userIndex !== -1) {
+					users[userIndex]['cart'] = user.cart
+					users[userIndex]['fav'] = user.fav
+				}
+				localStorage.setItem('users', JSON.stringify(users))
+			}
 			sessionStorage.removeItem('user')
 			this.$emit('logout')
 		}
