@@ -109,7 +109,12 @@ export default {
                 user.fav = this.fav
                 sessionStorage.setItem('user', JSON.stringify(user))
             }
-        }
+        },
+		handleLogout() {
+			this.handleShow('showLogin')
+			this.cart = []
+			this.fav= []
+		}
     },
     computed: {
 		productQuantity() {
@@ -138,6 +143,7 @@ export default {
                     @showCart="handleShow"
                     @showLogin="handleShow"
                     @showInfo="handleShow"
+					@logout="handleLogout"
                     :show="show"
                 ></Nav>
             </div>

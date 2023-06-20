@@ -1,7 +1,7 @@
 <script>
 export default {
 	name: 'Nav',
-	emits: ['showListing', 'showCart', 'showLogin', 'showInfo'],
+	emits: ['showListing', 'showCart', 'showInfo', 'logout'],
     components: {},
     props: {
 		show: String
@@ -25,13 +25,13 @@ export default {
 		handleShowCart() {
             this.$emit('showCart', 'showCart')
         },
-		handleShowLogin() {
-			sessionStorage.removeItem('user')
-            this.$emit('showLogin', 'showLogin')
-        },
 		handleShowInfo() {
-            this.$emit('showInfo', 'showInfo')
-        }
+			this.$emit('showInfo', 'showInfo')
+        },
+		handleLogout() {
+			sessionStorage.removeItem('user')
+			this.$emit('logout')
+		}
 	}
 }
 </script>
@@ -41,7 +41,7 @@ export default {
         <div class="nav-routes">
 			<div class="route" v-show="show !== 'showListing'" @click="handleShowListing">Ir a productos</div>
 			<div class="route" v-show="show !== 'showCart'" @click="handleShowCart">Ir a carrito</div>
-			<div class="route" @click="handleShowLogin">Cerrar sesión</div>
+			<div class="route" @click="handleLogout">Cerrar sesión</div>
 		</div>
     </div>
 </template>
