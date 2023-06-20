@@ -14,7 +14,7 @@ export default {
     data() {
         return {
             show: 'showLogin',
-            user: {},
+            cart: [],
 			productIndex: -1,
             products: [
                 {
@@ -51,6 +51,7 @@ export default {
         let user = sessionStorage.getItem('user')
         if (user) {
             user = JSON.parse(user)
+			if (user.hasOwnProperty('productIndex')) this.productIndex = user.productIndex
             this.handleShow(user.route)
         } else {
             this.handleShow('showLogin')
@@ -60,6 +61,13 @@ export default {
         handleShow(component) {
 			if (component === 'showListing' && this.productIndex > 0) this.productIndex = -1
             this.show = component
+			let user = sessionStorage.getItem('user')
+			if (user && (component !== 'showLogin' && component !== 'showRegister')) {
+				user = JSON.parse(user)
+				user.route = component
+				user.productIndex = this.productIndex
+				sessionStorage.setItem('user', JSON.stringify(user))
+			}
         },
 		handleInfo(data) {
 			this.productIndex = data[1]
