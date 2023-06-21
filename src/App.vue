@@ -2,6 +2,7 @@
 import Header from './components/Header.vue'
 import TemporalRouting from './components/TemporalRouting.vue'
 import Nav from './components/Nav.vue'
+import { productInfoMixin } from './mixins/productInfoMixin'
 const pages = await import('./pages')
 
 export default {
@@ -11,6 +12,7 @@ export default {
         Nav,
         ...pages
     },
+	mixins: [productInfoMixin],
     data() {
         return {
             show: 'showLogin',
@@ -121,14 +123,10 @@ export default {
     },
     computed: {
 		productQuantity() {
-            if (this.productIndex === -1 || this.cart.length === 0) return 0
-            const cartIndex = this.cart.findIndex(e => this.productIndex === e.productIndex)
-            if (cartIndex === -1) return 0
-            return this.cart[cartIndex].quantity
+			return this.sendQuantity(this.productIndex)
         },
 		isFav() {
-			if (this.fav.includes(this.productIndex)) return true
-			return false
+			return this.sendIsFav(this.productIndex)
 		}
 	}
 }

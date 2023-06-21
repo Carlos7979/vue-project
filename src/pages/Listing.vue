@@ -1,11 +1,14 @@
 <script>
 import Card from '../components/Card.vue'
+import { productInfoMixin } from '../mixins/productInfoMixin'
+
 export default {
     name: 'Listing',
     emits: ['showInfo', 'handleQuantity', 'handleFav'],
     components: {
         Card
     },
+	mixins: [productInfoMixin],
     props: {
         products: Array,
         cart: Array,
@@ -18,16 +21,6 @@ export default {
         handleShowInfo(data) {
             this.$emit('showInfo', data)
         },
-        sendQuantity(index) {
-            if (this.cart.length === 0) return 0
-            const cartIndex = this.cart.findIndex(e => index === e.productIndex)
-            if (cartIndex === -1) return 0
-            return this.cart[cartIndex].quantity
-        },
-		isFav(index) {
-			if (this.fav.includes(index)) return true
-			return false
-		},
         handleQuantity(data) {
             this.$emit('handleQuantity', data)
         },
@@ -42,7 +35,7 @@ export default {
         <div v-for="(product, i) of products" :key="`${i}-product`">
             <Card
                 :product="product"
-				:fav="isFav(i)"
+				:fav="sendIsFav(i)"
                 @showInfo="handleShowInfo"
                 :quantity="sendQuantity(i)"
                 @quantity="handleQuantity"
