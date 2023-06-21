@@ -1,6 +1,7 @@
 <script>
 import Card from '../components/Card.vue'
-import { productInfoMixin } from '../mixins/productInfoMixin'
+import { productInfo } from '../mixins/productInfo'
+import { productsArrayProps } from '../mixins/productsArrayProps'
 
 export default {
     name: 'Listing',
@@ -8,12 +9,7 @@ export default {
     components: {
         Card
     },
-	mixins: [productInfoMixin],
-    props: {
-        products: Array,
-        cart: Array,
-        fav: Array
-    },
+	mixins: [productInfo, productsArrayProps],
     data() {
         return {}
     },

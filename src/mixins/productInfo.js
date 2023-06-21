@@ -1,4 +1,4 @@
-export const productInfoMixin = {
+export const productInfo = {
 	methods: {
 		sendQuantity(index) {
             if (index === -1 || this.cart.length === 0) return 0

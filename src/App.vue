@@ -2,7 +2,8 @@
 import Header from './components/Header.vue'
 import TemporalRouting from './components/TemporalRouting.vue'
 import Nav from './components/Nav.vue'
-import { productInfoMixin } from './mixins/productInfoMixin'
+import { productInfo } from './mixins/productInfo'
+// import { productInfo } from './mixins/productInfo'
 const pages = await import('./pages')
 
 export default {
@@ -12,7 +13,7 @@ export default {
         Nav,
         ...pages
     },
-	mixins: [productInfoMixin],
+	mixins: [productInfo],
     data() {
         return {
             show: 'showLogin',
