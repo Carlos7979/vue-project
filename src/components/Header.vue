@@ -6,7 +6,7 @@
 	props: {},
 	data () {
 		return {
-			title: 'Proyecto final (1ra entrega) | Vue Bakery',
+			title: 'Proyecto final (2da entrega) | Vue Bakery',
             coderImg,
             coderW: 50,
             vueImg,

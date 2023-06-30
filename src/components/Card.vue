@@ -41,6 +41,7 @@ export default {
         handleShowInfo() {
             if (this.detail) return
             this.$emit('showInfo', ['showInfo', this.product.id - 1])
+			this.$router.push({ path: `/info/${this.product.id}` })
         }
     }
 }

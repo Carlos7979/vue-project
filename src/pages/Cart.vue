@@ -23,6 +23,8 @@ export default {
     methods: {
         handleShowInfo(data) {
             this.$emit('showInfo', data)
+			this.$router.push({ path: `/info/${data[1] + 1}` })
+
         },
         sendQuantity(index) {
             if (this.cart.length === 0) return 0
@@ -53,7 +55,7 @@ export default {
 }
 </script>
 <template>
-    <div class="cart">
+    <div v-show="cart.length" class="cart">
         <div class="cart-elements-header">
             <div class="cart-elements">
                 <div class="cart-element t-header">Producto</div>
@@ -103,6 +105,9 @@ export default {
             </div>
         </div>
     </div>
+	<div v-show="!cart.length" class="cart-empty">
+		El carrito de compras se encuentra vacío
+	</div>
 </template>
 <style scoped>
 .cart {
@@ -115,7 +120,16 @@ export default {
     flex-wrap: wrap;
 }
 
-.cart-elements-header {
+.cart-empty {
+	width: fit-content;
+	margin-top: 20px;
+	margin-left: 32%;
+	padding: 20px;
+	border-radius: 5px;
+	font-size: larger;
+}
+
+.cart-elements-header, .cart-empty {
     background-color: whitesmoke;
 }
 .cart-elements {
@@ -132,7 +146,7 @@ export default {
     text-align: center;
 }
 
-.t-header {
+.t-header, .cart-empty {
     font-weight: 600;
 }
 

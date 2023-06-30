@@ -1,14 +1,14 @@
 <script>
 export default {
 	name: 'Nav',
-	emits: ['showListing', 'showCart', 'showInfo', 'logout'],
+	emits: ['showListing', 'showCart', 'showInfo', 'logout', 'logged'],
     components: {},
     props: {
-		show: String
+		show: String,
+		name: String
 	},
     data() {
         return {
-            name: '',
 			title: {
 				showListing: 'Productos',
 				showInfo: 'Detalle del producto',
@@ -20,18 +20,18 @@ export default {
         let user = sessionStorage.getItem('user')
         if (user) {
             user = JSON.parse(user)
-            this.name = user.name
+            // this.name = user.name
+			this.$emit('logged', user.name)
         }
     },
 	methods: {
 		handleShowListing() {
             this.$emit('showListing', 'showListing')
+			this.$router.push({ path: '/listing' })
         },
 		handleShowCart() {
             this.$emit('showCart', 'showCart')
-        },
-		handleShowInfo() {
-			this.$emit('showInfo', 'showInfo')
+			this.$router.push({ path: '/cart' })
         },
 		handleLogout() {
 			let user = sessionStorage.getItem('user')
@@ -47,7 +47,9 @@ export default {
 				localStorage.setItem('users', JSON.stringify(users))
 			}
 			sessionStorage.removeItem('user')
+			// this.name = ''
 			this.$emit('logout')
+			this.$router.push({ path: '/' })
 		}
 	}
 }
