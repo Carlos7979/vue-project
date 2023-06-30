@@ -57,6 +57,7 @@ export default {
             :alt="product.title"
             :height="!detail ? '200' : ''"
             @click="handleShowInfo"
+			@load="$event.target.style.opacity = 1"
         />
         <div class="card-body">
             <h5 class="card-title">{{ product.title }}</h5>
@@ -102,6 +103,12 @@ export default {
 
 .card-image {
     cursor: pointer;
+}
+
+/* .card-img-top is a bootstrap class */
+.card-img-top {
+	opacity: 0;
+	transition: opacity 1s ease-in-out;
 }
 
 .heart {
