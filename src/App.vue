@@ -59,8 +59,8 @@ export default {
         if (user) {
             user = JSON.parse(user)
             if (user.hasOwnProperty('productIndex')) this.productIndex = user.productIndex
-            if (user.hasOwnProperty('cart')) this.cart = user.cart
-			if (user.hasOwnProperty('fav')) this.fav = user.fav
+            if (user.cart) this.cart = user.cart
+			if (user.fav) this.fav = user.fav
             this.handleShow(user.route)
         } else {
             this.handleShow('showLogin')
@@ -75,9 +75,9 @@ export default {
                 user = JSON.parse(user)
                 user.route = component
                 user.productIndex = this.productIndex
-                if (user.hasOwnProperty('cart')) this.cart = user.cart
+                if (user.cart) this.cart = user.cart
 				else user.cart = this.cart
-				if (user.hasOwnProperty('fav')) this.fav = user.fav
+				if (user.fav) this.fav = user.fav
 				else user.fav = this.fav
                 sessionStorage.setItem('user', JSON.stringify(user))
             }
