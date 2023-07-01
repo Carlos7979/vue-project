@@ -2,6 +2,8 @@
     import Header from './components/Header.vue'
     import Nav from './components/Nav.vue'
     import { productInfo } from './mixins/productInfo'
+    import axios from 'axios'
+	import { getFromStorage, saveInStorage } from './utils/sessionStorage'
 
     export default {
         components: {
@@ -13,124 +15,120 @@
             return {
                 show: 'showLogin',
                 isLogged: false,
-				name: '',
+                userId: '',
+                name: '',
+                cartId: '',
                 cart: [],
                 fav: [],
-                productIndex: -1,
-                products: [
-                    {
-                        title: 'Pie de manzana',
-                        img: 'https://dav-leda.github.io/images-bakery/apple-pie.jpg',
-                        shortDescription:
-                            'La tarta de manzana es una tarta de fruta elaborada con una masa recubierta de manzana.',
-                        largeDescription:
-                            'La tarta de manzana es una tarta de fruta elaborada con una masa recubierta de manzana. Existen muchas variantes, y la manzana puede ser troceada o en compota. Las manzanas pueden colocarse directamente encima de la masa o sobre una base de crema.',
-                        price: 420,
-                        id: 1
-                    },
-                    {
-                        title: 'Brownie',
-                        img: 'https://dav-leda.github.io/images-bakery/brownies.jpg',
-                        shortDescription:
-                            'Un brownie es un bizcocho de chocolate pequeño, típico de la gastronomía de Estados Unidos.',
-                        largeDescription:
-                            'Un brownie es un bizcocho de chocolate pequeño, típico de la gastronomía de Estados Unidos. Se llama así por su color marrón oscuro, o brown en inglés. A veces se cubre con jarabe espeso de chocolate y puede llevar dentro trocitos de nueces, chocolate butterscotch o mantequilla de maní.',
-                        price: 250,
-                        id: 2
-                    },
-                    {
-                        title: 'Selva negra',
-                        img: 'https://dav-leda.github.io/images-bakery/selva-negra.jpg',
-                        shortDescription:
-                            'La Selva Negra es uno de los dulces más característicos de la gastronomía alemana.',
-                        largeDescription:
-                            'La Selva Negra es uno de los dulces más característicos de la gastronomía alemana. Está compuesta por varias capas de bizcochuelo de chocolate empapado en kirsch e intercaladas con nata y cerezas.',
-                        price: 900,
-                        id: 3
-                    }
-                ]
+                productId: '',
+                products: [],
+                foodURL: 'https://649fd22fed3c41bdd7a6bb8d.mockapi.io/api/food',
+                usersURL: 'https://649fbf32ed3c41bdd7a6a1d1.mockapi.io/api/food/users'
             }
         },
-        created() {
-            let user = sessionStorage.getItem('user')
+        async created() {
+            const user = getFromStorage('user')
             if (user) {
-                user = JSON.parse(user)
-                if (user.hasOwnProperty('productIndex')) this.productIndex = user.productIndex
-                if (user.cart) this.cart = user.cart
-                if (user.fav) this.fav = user.fav
-                this.handleShow(user.route)
-				this.name = user.name
+                if (!this.products.length) await this.getProducts()
+                if (user.hasOwnProperty('productId')) this.productId = user.productId
+                try {
+                    if (user.cart) {
+                        await this.getCart(user.cart)
+                    }
+                    if (user.fav) this.fav = user.fav
+					if (this.show !== 'showNotFound') this.handleShow(user.route)
+                    this.name = user.name
+                } catch (error) {
+                    console.log(error)
+                }
             } else {
                 this.handleShow('showLogin')
             }
         },
         methods: {
             handleShow(component) {
-                if (component === 'showListing' && this.productIndex > 0) this.productIndex = -1
+                if (component === 'showListing' && this.productId !== '') this.productId = ''
                 this.show = component
-                let user = sessionStorage.getItem('user')
+                const user = getFromStorage('user')
                 if (user && component !== 'showLogin' && component !== 'showRegister') {
-                    user = JSON.parse(user)
-                    user.route = component
-                    user.productIndex = this.productIndex
-                    if (user.cart) this.cart = user.cart
-                    else user.cart = this.cart
+                    if (component !== 'showNotFound') user.route = component
+                    user.productId = this.productId
                     if (user.fav) this.fav = user.fav
                     else user.fav = this.fav
-                    sessionStorage.setItem('user', JSON.stringify(user))
+                    saveInStorage('user', user)
                 }
             },
             handleInfo(data) {
-                this.productIndex = data[1]
+                this.productId = data[1]
                 this.handleShow(data[0])
             },
-            handleProductQuantity(data) {
+            async handleProductQuantity(data) {
+                console.log(data)
                 const quantity = data[0]
-                const productIndex = data[1]
-                const cartIndex = this.cart.findIndex(e => productIndex === e.productIndex)
+                const productId = data[1]
+                const cartIndex = this.cart.findIndex(e => productId === e.productId)
                 if (this.cart.length === 0 || cartIndex === -1)
-                    this.cart.push({ quantity, productIndex })
+                    this.cart.push({ quantity, productId })
                 else if (quantity === 0) this.cart.splice(cartIndex, 1)
                 else this.cart[cartIndex].quantity = quantity
-                let user = sessionStorage.getItem('user')
-                if (user) {
-                    user = JSON.parse(user)
-                    user.cart = this.cart
-                    sessionStorage.setItem('user', JSON.stringify(user))
+                try {
+                    await axios.put(`${this.foodURL}carts/${this.cartId}`, { cart: this.cart })
+                } catch (error) {
+                    console.log(error)
                 }
             },
-            handleProductFav(data) {
+            async handleProductFav(data) {
                 const fav = data[0]
-                const productIndex = data[1]
-                if (fav) this.fav.push(productIndex)
+                const productId = data[1]
+                if (fav) this.fav.push(productId)
                 else {
-                    const favIndex = this.fav.findIndex(e => productIndex === e)
+                    const favIndex = this.fav.findIndex(e => productId === e)
                     this.fav.splice(favIndex, 1)
                 }
-                let user = sessionStorage.getItem('user')
+                const user = getFromStorage('user')
                 if (user) {
-                    user = JSON.parse(user)
-                    user.fav = this.fav
-                    sessionStorage.setItem('user', JSON.stringify(user))
+                    try {
+                        await axios.put(`${this.usersURL}/${user.id}`, { fav: this.fav })
+                        user.fav = this.fav
+                        saveInStorage('user', user)
+                    } catch (error) {
+                        console.log(error)
+                    }
                 }
             },
-			handleLogin(name) {
-				this.name = name
-			},
+            async handleLogin(user) {
+                if (!this.products.length) await this.getProducts()
+                if (!this.cart.length) await this.getCart(user.cart)
+                this.name = user.name
+                this.userId = user.id
+                this.cartId = user.cart
+                this.productId = user.productId
+            },
             handleLogout() {
                 this.handleShow('showLogin')
                 this.cart = []
                 this.fav = []
-				this.isLogged = false,
-				this.name = ''
+                this.isLogged = false
+                this.name = ''
+            },
+            async getProducts() {
+                const products = await axios.get(`${this.foodURL}/products`)
+                if (products.data.length) this.products = products.data
+            },
+            async getCart(cartId) {
+                const cart = await axios.get(`${this.foodURL}/carts/${cartId}`)
+                if (cart.data.cart.length) this.cart = cart.data.cart
             }
         },
         computed: {
             productQuantity() {
-                return this.sendQuantity(this.productIndex)
+                return this.sendQuantity(this.productId)
             },
             isFav() {
-                return this.sendIsFav(this.productIndex)
+                return this.sendIsFav(this.productId)
+            },
+            product() {
+                return this.sendProduct(this.productId)
             }
         }
     }
@@ -146,24 +144,27 @@
                     @showCart="handleShow"
                     @showLogin="handleShow"
                     @showInfo="handleShow"
-					@logged="handleLogin"
+                    @logged="handleLogin"
                     @logout="handleLogout"
                     :show="show"
-					:name="name"
+                    :name="name"
                 ></Nav>
             </div>
-			<RouterView
+            <RouterView
                 @showInfo="handleInfo"
                 :products="products"
                 :cart="cart"
                 @handleQuantity="handleProductQuantity"
-				@logged="handleLogin"
+                @logged="handleLogin"
                 :fav="fav"
-                @handleFav="handleProductFav" 
+                @handleFav="handleProductFav"
+                :usersURL="usersURL"
+                :foodURL="foodURL"
+				@notFound="handleShow"
             />
             <RouterView
                 name="Info"
-                :product="productIndex === -1 ? {} : products[productIndex]"
+                :product="productId === '' ? {} : product"
                 :fav="isFav"
                 @handleQuantity="handleProductQuantity"
                 @handleFav="handleProductFav"

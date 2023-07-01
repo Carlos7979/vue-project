@@ -1,6 +1,8 @@
 <script>
     import Input from '../components/Input.vue'
     import Swal from 'sweetalert2'
+    import axios from 'axios'
+    import { saveInStorage } from '../utils/sessionStorage'
 
     export default {
         name: 'Register',
@@ -8,12 +10,21 @@
         components: {
             Input
         },
-        props: {},
+        props: {
+            usersURL: {
+                type: String,
+                required: true
+            },
+            foodURL: {
+                type: String,
+                required: true
+            }
+        },
         data() {
             return {
                 form: {
                     name: '',
-                    lastName: '',
+                    last_name: '',
                     email: '',
                     user: '',
                     password: '',
@@ -33,11 +44,11 @@
                 form.reset()
                 this.$emit('showLogin', 'showLogin')
             },
-            handleShowListing(name) {
+            handleShowListing(user) {
                 this.$emit('showListing', 'showListing')
-				this.$emit('logged', name)
+                this.$emit('logged', user)
             },
-            validate() {
+            async validate() {
                 const error = this.$refs.error
                 for (const key in this.form) {
                     if (!this.form[key]) {
@@ -46,27 +57,37 @@
                         return false
                     }
                 }
-                let users = localStorage.getItem('users')
-                if (users) {
-                    users = JSON.parse(users)
-                    if (users.some(e => e.email === this.form.email)) {
-                        error.innerText = 'El correo electrónico ya se encuentra registrado'
+                let user
+                try {
+                    let users = await axios.get(this.usersURL)
+                    users = users.data
+                    if (users.length) {
+                        if (users.some(e => e.email === this.form.email)) {
+                            error.innerText = 'El correo electrónico ya se encuentra registrado'
+                            if (!this.error) this.error = true
+                            return false
+                        }
+                        if (users.some(e => e.user === this.form.user)) {
+                            error.innerText = 'El nombre de usuario ya se encuentra registrado'
+                            if (!this.error) this.error = true
+                            return false
+                        }
+                    }
+                    if (this.form.password !== this.form.confirmPassword) {
+                        error.innerText = 'Las contraseñas no coinciden'
                         if (!this.error) this.error = true
                         return false
                     }
-                    if (users.some(e => e.user === this.form.user)) {
-                        error.innerText = 'El nombre de usuario ya se encuentra registrado'
+                    error.innerText = ''
+                    return true
+                } catch (err) {
+                    console.log(err)
+                    if (err.message) {
+                        error.innerText = `Falla del servidor:\n${err.message}`
                         if (!this.error) this.error = true
-                        return false
                     }
-                }
-                if (this.form.password !== this.form.confirmPassword) {
-                    error.innerText = 'Las contraseñas no coinciden'
-                    if (!this.error) this.error = true
                     return false
                 }
-                error.innerText = ''
-                return true
             }
         },
         mounted() {
@@ -74,36 +95,42 @@
             form.addEventListener('submit', async e => {
                 e.preventDefault()
                 this.isSubmitted = true
-                if (this.validate()) {
-                    let users = localStorage.getItem('users')
-                    const user = {
-                        ...this.form
-                    }
-                    delete user.confirmPassword
-                    if (users) {
-                        users = JSON.parse(users)
-                        users.push(user)
-                        localStorage.setItem('users', JSON.stringify(users))
-                    } else {
-                        localStorage.setItem('users', JSON.stringify([user]))
-                    }
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Registro exitoso',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        e.target.reset()
-                        for (const key in this.form) {
-                            this.form[key] = ''
+                try {
+                    const validate = await this.validate()
+                    if (validate) {
+                        const body = {
+                            ...this.form
                         }
-                        this.isSubmitted = false
-                        delete user.password
-                        user.route = 'showListing'
-                        sessionStorage.setItem('user', JSON.stringify(user))
-                        this.handleShowListing(user.name)
-						this.$router.push({ path: '/listing' })
-                    })
+                        delete body.confirmPassword
+                        let cart = await axios.post(`${this.foodURL}/carts`)
+                        if (cart.data) {
+                            cart = cart.data
+                            body.cart = cart.id
+                            let user = await axios.post(this.usersURL, body)
+                            if (user) {
+                                user = user.data
+                                delete user.password
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Registro exitoso',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    e.target.reset()
+                                    for (const key in this.form) {
+                                        this.form[key] = ''
+                                    }
+                                    this.isSubmitted = false
+                                    user.route = 'showListing'
+                                    saveInStorage('user', user)
+                                    this.handleShowListing(user)
+                                    this.$router.push({ path: '/listing' })
+                                })
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log(error)
                 }
             })
         }
@@ -113,7 +140,12 @@
     <div class="register">
         <form ref="form" action="" method="post">
             <Input type="text" id="name" placeholder="Nombre(s)" @input="handleInput"></Input>
-            <Input type="text" id="lastName" placeholder="Apellido(s)" @input="handleInput"></Input>
+            <Input
+                type="text"
+                id="last_name"
+                placeholder="Apellido(s)"
+                @input="handleInput"
+            ></Input>
             <Input
                 type="email"
                 id="email"

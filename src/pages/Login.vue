@@ -1,6 +1,8 @@
 <script>
     import Input from '../components/Input.vue'
     import Swal from 'sweetalert2'
+    import axios from 'axios'
+import { saveInStorage } from '../utils/sessionStorage'
     // import { RouterLink, RouterView } from 'vue-router'
 
     export default {
@@ -9,7 +11,12 @@
         components: {
             Input
         },
-        props: {},
+        props: {
+            usersURL: {
+                type: String,
+                required: true
+            }
+        },
         data() {
             return {
                 form: {
@@ -21,21 +28,32 @@
             }
         },
         methods: {
-            handleInput([name, value]) {
+            async handleInput([name, value]) {
                 this.form[name] = value
-                if (this.isSubmitted && this.validate()) this.error = false
+                if (this.isSubmitted && (await this.validate())) this.error = false
             },
             handleShowRegister() {
                 const form = this.$refs.form
                 form.reset()
                 this.$emit('showRegister', 'showRegister')
             },
-            handleShowListing(name) {
+            handleShowListing(user) {
                 this.$emit('showListing', 'showListing')
-				this.$emit('logged', name)
+                this.$emit('logged', user)
             },
-            validate() {
+            validate(unauthorized, authError) {
                 const error = this.$refs.error
+                if (unauthorized) {
+                    error.innerText = 'Debes identificarte como usuario'
+                    if (!this.error) this.error = true
+                    this.isSubmitted = true
+                    return false
+                }
+                if (authError) {
+                    error.innerText = 'El usuario o contraseña es incorrecto'
+                    if (!this.error) this.error = true
+                    return false
+                }
                 for (const key in this.form) {
                     if (!this.form[key]) {
                         error.innerText = 'Todos los campos son obligatorios'
@@ -43,54 +61,59 @@
                         return false
                     }
                 }
-                let users = localStorage.getItem('users')
-                let user
-                if (users) {
-                    users = JSON.parse(users)
-                    user = users.find(e => e.user === this.form.user)
-                    if (!user) {
-                        error.innerText = 'El usuario o contraseña es incorrecto'
-                        if (!this.error) this.error = true
-                        return false
-                    }
-                    if (user.password !== this.form.password) {
-                        error.innerText = 'El usuario o contraseña es incorrecto'
-                        if (!this.error) this.error = true
-                        return false
-                    }
-                } else {
-                    error.innerText = 'El usuario o contraseña es incorrecto'
-                    if (!this.error) this.error = true
-                    return false
-                }
                 error.innerText = ''
-                return user
+                return true
             }
         },
         mounted() {
+            if (this.$route.name === 'unauthorized') this.validate(true)
             const form = this.$refs.form
             form.addEventListener('submit', async e => {
                 e.preventDefault()
                 this.isSubmitted = true
-                const user = this.validate()
-                if (user) {
-                    delete user.password
-                    user.route = 'showListing'
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Ingreso exitoso',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        e.target.reset()
-                        for (const key in this.form) {
-                            this.form[key] = ''
+                try {
+                    let user
+                    let users = await axios.get(this.usersURL)
+                    users = users.data
+                    if (users.length) {
+                        user = users.find(e => e.user === this.form.user)
+                        if (!user) {
+                            this.validate(null, true)
+                            return
                         }
-                        this.isSubmitted = false
-                        sessionStorage.setItem('user', JSON.stringify(user))
-                        this.handleShowListing(user.name)
-						this.$router.push({ path: '/listing' })
-                    })
+                        if (user.password !== this.form.password) {
+                            this.validate(null, true)
+                            return
+                        }
+                    } else {
+                        this.validate(null, true)
+                        return
+                    }
+                    if (this.validate()) {
+                        delete user.password
+                        user.route = 'showListing'
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Ingreso exitoso',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            e.target.reset()
+                            for (const key in this.form) {
+                                this.form[key] = ''
+                            }
+                            this.isSubmitted = false
+                            saveInStorage('user', user)
+                            this.handleShowListing(user)
+                            this.$router.push({ path: '/listing' })
+                        })
+                    }
+                } catch (err) {
+                    console.log(err)
+                    if (err.message) {
+                        error.innerText = `Falla del servidor:\n${err.message}`
+                        if (!this.error) this.error = true
+                    }
                 }
             })
         }

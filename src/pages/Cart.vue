@@ -3,6 +3,7 @@ import Card from '../components/Card.vue'
 import CartMinusIconVue from '../components/icons/card/CartMinusIcon.vue'
 import CartPlusIcon from '../components/icons/card/CartPlusIcon.vue'
 import Trash from '../components/icons/card/Trash.vue'
+import { productInfo } from '../mixins/productInfo'
 
 export default {
     name: 'Cart',
@@ -13,6 +14,7 @@ export default {
         CartPlusIcon,
 		Trash
     },
+	mixins: [productInfo],
     props: {
         products: Array,
         cart: Array
@@ -28,7 +30,7 @@ export default {
         },
         sendQuantity(index) {
             if (this.cart.length === 0) return 0
-            const cartIndex = this.cart.findIndex(e => index === e.productIndex)
+            const cartIndex = this.cart.findIndex(e => index === e.productId)
             if (cartIndex === -1) return 0
             return this.cart[cartIndex].quantity
         },
@@ -47,7 +49,7 @@ export default {
         totalAmount() {
             let total = 0
             this.cart.forEach(e => {
-                total += this.products[e.productIndex]['price'] * e.quantity
+                total += this.sendProduct(e.productId)['price'] * e.quantity
             })
             return total
         }
@@ -55,58 +57,60 @@ export default {
 }
 </script>
 <template>
-    <div v-show="cart.length" class="cart">
-        <div class="cart-elements-header">
-            <div class="cart-elements">
-                <div class="cart-element t-header">Producto</div>
-                <div class="cart-element t-header">Precio</div>
-                <div class="cart-element t-header">Cantidad</div>
-                <div class="cart-element t-header">Total</div>
-                <div class="cart-element t-header">Quitar</div>
-            </div>
-        </div>
-        <div v-for="(product, i) of cart" :key="`${i}-product`">
-            <div class="cart-elements" v-show="product.quantity > 0">
-                <div @click="() => handleShowInfo(['showInfo', product.productIndex])" class="cart-element route">{{ products[product.productIndex].title }}</div>
-                <div class="cart-element">{{ products[product.productIndex].price }}</div>
-                <div class="cart-element">
-                    <span
-                        class="click-cart"
-                        @click="() => handleQuantity([product.quantity - 1, product.productIndex])"
-                    >
-                        <CartMinusIconVue />
-                    </span>
-                    <span class="quantity">{{ product.quantity }}</span>
-                    <span
-                        class="click-cart"
-                        @click="() => handleQuantity([product.quantity + 1, product.productIndex])"
-                    >
-                        <CartPlusIcon />
-                    </span>
-                </div>
-                <div class="cart-element">
-                    {{ product.quantity * products[product.productIndex].price }}
-                </div>
-                <div
-					class="cart-element click-cart trash"
-					@click="() => handleQuantity([0, product.productIndex])"
-				>
-					<Trash />
+    <div>
+		<div v-show="cart.length" class="cart">
+			<div class="cart-elements-header">
+				<div class="cart-elements">
+					<div class="cart-element t-header">Producto</div>
+					<div class="cart-element t-header">Precio</div>
+					<div class="cart-element t-header">Cantidad</div>
+					<div class="cart-element t-header">Total</div>
+					<div class="cart-element t-header">Quitar</div>
 				</div>
-            </div>
-        </div>
-        <div class="cart-elements-header">
-            <div class="cart-elements">
-                <div class="cart-element t-header"></div>
-                <div class="cart-element t-header"></div>
-                <div class="cart-element t-header">{{ totalProducts }}</div>
-                <div class="cart-element t-header">{{ totalAmount }}</div>
-                <div class="cart-element t-header"></div>
-            </div>
-        </div>
-    </div>
-	<div v-show="!cart.length" class="cart-empty">
-		El carrito de compras se encuentra vacío
+			</div>
+			<div v-for="(product, i) of cart" :key="`${i}-product`">
+				<div class="cart-elements" v-show="product.quantity > 0">
+					<div @click="() => handleShowInfo(['showInfo', product.productId])" class="cart-element route">{{ sendProduct(product.productId).title }}</div>
+					<div class="cart-element">{{ products[i].price }}</div>
+					<div class="cart-element">
+						<span
+							class="click-cart"
+							@click="() => handleQuantity([product.quantity - 1, product.productId])"
+						>
+							<CartMinusIconVue />
+						</span>
+						<span class="quantity">{{ product.quantity }}</span>
+						<span
+							class="click-cart"
+							@click="() => handleQuantity([product.quantity + 1, product.productId])"
+						>
+							<CartPlusIcon />
+						</span>
+					</div>
+					<div class="cart-element">
+						{{ product.quantity * products[i].price }}
+					</div>
+					<div
+							class="cart-element click-cart trash"
+							@click="() => handleQuantity([0, product.productId])"
+						>
+							<Trash />
+						</div>
+				</div>
+			</div>
+			<div class="cart-elements-header">
+				<div class="cart-elements">
+					<div class="cart-element t-header"></div>
+					<div class="cart-element t-header"></div>
+					<div class="cart-element t-header">{{ totalProducts }}</div>
+					<div class="cart-element t-header">{{ totalAmount }}</div>
+					<div class="cart-element t-header"></div>
+				</div>
+			</div>
+		</div>
+			<div v-show="!cart.length" class="cart-empty">
+				El carrito de compras se encuentra vacío
+			</div>
 	</div>
 </template>
 <style scoped>

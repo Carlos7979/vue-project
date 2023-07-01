@@ -31,9 +31,9 @@ export default {
         <div v-for="(product, i) of products" :key="`${i}-product`">
             <Card
                 :product="product"
-				:fav="sendIsFav(i)"
+				:fav="sendIsFav(product.id)"
                 @showInfo="handleShowInfo"
-                :quantity="sendQuantity(i)"
+                :quantity="sendQuantity(product.id)"
                 @quantity="handleQuantity"
 				@fav="handleFav"
             ></Card>

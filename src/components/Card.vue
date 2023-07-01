@@ -25,22 +25,26 @@ export default {
     data() {
         return {}
     },
+	// mounted() {
+	// 	console.log('fav: ', this.fav);
+	// 	console.log(this.product.id);
+	// },
     methods: {
         toggleFav() {
-            this.$emit('fav', [!this.fav, this.product.id - 1])
+            this.$emit('fav', [!this.fav, this.product.id])
         },
         addQuantity() {
-            this.$emit('quantity', [this.quantity + 1, this.product.id - 1])
+            this.$emit('quantity', [this.quantity + 1, this.product.id])
         },
         removeQuantity() {
-            if (this.quantity > 0) this.$emit('quantity', [this.quantity - 1, this.product.id - 1])
+            if (this.quantity > 0) this.$emit('quantity', [this.quantity - 1, this.product.id])
         },
 		emptyProduct() {
-			if (this.quantity > 0) this.$emit('quantity', [0, this.product.id - 1])
+			if (this.quantity > 0) this.$emit('quantity', [0, this.product.id])
 		},
         handleShowInfo() {
             if (this.detail) return
-            this.$emit('showInfo', ['showInfo', this.product.id - 1])
+            this.$emit('showInfo', ['showInfo', this.product.id])
 			this.$router.push({ path: `/info/${this.product.id}` })
         }
     }
