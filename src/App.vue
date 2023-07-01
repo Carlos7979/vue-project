@@ -63,7 +63,6 @@
                 this.handleShow(data[0])
             },
             async handleProductQuantity(data) {
-                console.log(data)
                 const quantity = data[0]
                 const productId = data[1]
                 const cartIndex = this.cart.findIndex(e => productId === e.productId)
