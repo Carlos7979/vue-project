@@ -2,21 +2,16 @@
     import Input from '../components/Input.vue'
     import Swal from 'sweetalert2'
     import axios from 'axios'
-import { saveInStorage } from '../utils/sessionStorage'
+    import { saveInStorage } from '../utils/sessionStorage'
     // import { RouterLink, RouterView } from 'vue-router'
+    const usersURL = import.meta.env.VITE_USER_URL
 
     export default {
         name: 'Login',
-        emits: ['showRegister', 'showListing', 'logged'],
         components: {
             Input
         },
-        props: {
-            usersURL: {
-                type: String,
-                required: true
-            }
-        },
+        props: {},
         data() {
             return {
                 form: {
@@ -35,11 +30,7 @@ import { saveInStorage } from '../utils/sessionStorage'
             handleShowRegister() {
                 const form = this.$refs.form
                 form.reset()
-                this.$emit('showRegister', 'showRegister')
-            },
-            handleShowListing(user) {
-                this.$emit('showListing', 'showListing')
-                this.$emit('logged', user)
+                this.$router.push({ path: '/register' })
             },
             validate(unauthorized, authError) {
                 const error = this.$refs.error
@@ -73,7 +64,7 @@ import { saveInStorage } from '../utils/sessionStorage'
                 this.isSubmitted = true
                 try {
                     let user
-                    let users = await axios.get(this.usersURL)
+                    let users = await axios.get(usersURL)
                     users = users.data
                     if (users.length) {
                         user = users.find(e => e.user === this.form.user)
@@ -91,7 +82,6 @@ import { saveInStorage } from '../utils/sessionStorage'
                     }
                     if (this.validate()) {
                         delete user.password
-                        user.route = 'showListing'
                         Swal.fire({
                             icon: 'success',
                             title: 'Ingreso exitoso',
@@ -104,7 +94,7 @@ import { saveInStorage } from '../utils/sessionStorage'
                             }
                             this.isSubmitted = false
                             saveInStorage('user', user)
-                            this.handleShowListing(user)
+							this.$store.dispatch('login', user)
                             this.$router.push({ path: '/listing' })
                         })
                     }

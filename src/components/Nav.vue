@@ -1,42 +1,38 @@
 <script>
     import { getFromStorage } from '../utils/sessionStorage'
-
+    const title = {
+        listing: 'Productos',
+        info: 'Detalle del producto',
+        cart: 'Carrito de compras',
+        notFound: 'Página no encontrada'
+    }
     export default {
         name: 'Nav',
-        emits: ['showListing', 'showCart', 'showInfo', 'logout', 'logged'],
+        emits: ['logout', 'logged'],
         components: {},
         props: {
-            show: String,
             name: String
         },
         data() {
-            return {
-                title: {
-                    showListing: 'Productos',
-                    showInfo: 'Detalle del producto',
-                    showCart: 'Carrito de compras',
-                    showNotFound: 'Página no encontrada'
-                }
-            }
+            return {}
         },
         created() {
+			this.title = title
             const user = getFromStorage('user')
             if (user) {
-                this.$emit('logged', user)
+                this.$store.dispatch('isLogged', user)
             }
         },
         methods: {
             handleShowListing() {
-                this.$emit('showListing', 'showListing')
                 this.$router.push({ path: '/listing' })
             },
             handleShowCart() {
-                this.$emit('showCart', 'showCart')
                 this.$router.push({ path: '/cart' })
             },
             handleLogout() {
                 sessionStorage.removeItem('user')
-                this.$emit('logout')
+                this.$store.dispatch('logout')
                 this.$router.push({ path: '/' })
             }
         }
@@ -44,13 +40,15 @@
 </script>
 <template>
     <div class="nav">
-        <div id="welcome" :class="show === 'showInfo' && 'welcome'">Bienvenido(a) {{ name }}</div>
-        <h4 class="title">{{ title[show] }}</h4>
+        <div id="welcome" :class="$route.name === 'info' && 'welcome'">
+            Bienvenido(a) {{ name }}
+        </div>
+        <h4 class="title">{{ title[$route.name] }}</h4>
         <div class="nav-routes">
-            <div class="route" v-show="show !== 'showListing'" @click="handleShowListing">
+            <div class="route" v-show="$route.name !== 'listing'" @click="handleShowListing">
                 Ir a productos
             </div>
-            <div class="route" v-show="show !== 'showCart'" @click="handleShowCart">
+            <div class="route" v-show="$route.name !== 'cart'" @click="handleShowCart">
                 Ir a carrito
             </div>
             <div class="route" @click="handleLogout">Cerrar sesión</div>

@@ -3,6 +3,8 @@
     import Swal from 'sweetalert2'
     import axios from 'axios'
     import { saveInStorage } from '../utils/sessionStorage'
+    const usersURL = import.meta.env.VITE_USER_URL
+    const foodURL = import.meta.env.VITE_FOOD_URL
 
     export default {
         name: 'Register',
@@ -10,16 +12,7 @@
         components: {
             Input
         },
-        props: {
-            usersURL: {
-                type: String,
-                required: true
-            },
-            foodURL: {
-                type: String,
-                required: true
-            }
-        },
+        props: {},
         data() {
             return {
                 form: {
@@ -59,7 +52,7 @@
                 }
                 let user
                 try {
-                    let users = await axios.get(this.usersURL)
+                    let users = await axios.get(usersURL)
                     users = users.data
                     if (users.length) {
                         if (users.some(e => e.email === this.form.email)) {
@@ -102,11 +95,11 @@
                             ...this.form
                         }
                         delete body.confirmPassword
-                        let cart = await axios.post(`${this.foodURL}/carts`)
+                        let cart = await axios.post(`${foodURL}/carts`)
                         if (cart.data) {
                             cart = cart.data
                             body.cart = cart.id
-                            let user = await axios.post(this.usersURL, body)
+                            let user = await axios.post(usersURL, body)
                             if (user) {
                                 user = user.data
                                 delete user.password
@@ -121,9 +114,8 @@
                                         this.form[key] = ''
                                     }
                                     this.isSubmitted = false
-                                    user.route = 'showListing'
                                     saveInStorage('user', user)
-                                    this.handleShowListing(user)
+                                    this.$store.dispatch('login', user)
                                     this.$router.push({ path: '/listing' })
                                 })
                             }

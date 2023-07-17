@@ -6,10 +6,6 @@ export const productInfo = {
             if (cartIndex === -1) return 0
             return this.cart[cartIndex].quantity
         },
-		sendIsFav(id) {
-			if (this.fav.includes(id)) return true
-			return false
-		},
 		sendProduct(id) {
 			return this.products.find(e => e.id === id)
 		}

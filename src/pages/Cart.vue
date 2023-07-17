@@ -7,7 +7,6 @@
 
     export default {
         name: 'Cart',
-        emits: ['showInfo', 'handleQuantity'],
         components: {
             Card,
             CartMinusIconVue,
@@ -15,26 +14,22 @@
             Trash
         },
         mixins: [productInfo],
-        props: {
-            products: Array,
-            cart: Array
-        },
         data() {
             return {}
         },
         methods: {
-            handleShowInfo(data) {
-                this.$emit('showInfo', data)
-                this.$router.push({ path: `/info/${data[1] + 1}` })
+            handleShowInfo(pid) {
+                this.$router.push({ path: `/info/${pid}` })
             },
-            sendQuantity(index) {
-                if (this.cart.length === 0) return 0
-                const cartIndex = this.cart.findIndex(e => index === e.productId)
-                if (cartIndex === -1) return 0
-                return this.cart[cartIndex].quantity
+            addQuantity(data) {
+				this.$store.dispatch('setQuantity', data)
             },
-            handleQuantity(data) {
-                this.$emit('handleQuantity', data)
+            removeQuantity(data) {
+                if (data.quantity >= 0)
+                    this.$store.dispatch('setQuantity', data)
+            },
+            emptyProduct(data) {
+				this.$store.dispatch('setQuantity', data)
             }
         },
         computed: {
@@ -51,6 +46,12 @@
                     total += this.sendProduct(e.productId)['price'] * e.quantity
                 })
                 return total
+            },
+            products() {
+                return this.$store.getters.getProducts
+            },
+            cart() {
+                return this.$store.getters.getCart
             }
         }
     }
@@ -70,7 +71,7 @@
             <div v-for="(product, i) of cart" :key="`${i}-product`">
                 <div class="cart-elements" v-show="product.quantity > 0">
                     <div
-                        @click="() => handleShowInfo(['showInfo', product.productId])"
+                        @click="() => handleShowInfo(product.productId)"
                         class="cart-element route"
                     >
                         {{ sendProduct(product.productId).title }}
@@ -79,14 +80,23 @@
                     <div class="cart-element">
                         <span
                             class="click-cart"
-                            @click="() => handleQuantity([product.quantity - 1, product.productId])"
+                            @click="() => removeQuantity({
+                                        quantity: product.quantity - 1,
+                                        productId: product.productId
+                                    })"
                         >
                             <CartMinusIconVue />
                         </span>
                         <span class="quantity">{{ product.quantity }}</span>
                         <span
                             class="click-cart"
-                            @click="() => handleQuantity([product.quantity + 1, product.productId])"
+                            @click="
+                                () =>
+                                    addQuantity({
+                                        quantity: product.quantity + 1,
+                                        productId: product.productId
+                                    })
+                            "
                         >
                             <CartPlusIcon />
                         </span>
@@ -96,7 +106,10 @@
                     </div>
                     <div
                         class="cart-element click-cart trash"
-                        @click="() => handleQuantity([0, product.productId])"
+                        @click="() => emptyProduct({
+                                        quantity: 0,
+                                        productId: product.productId
+                                    })"
                     >
                         <Trash />
                     </div>

@@ -44,8 +44,8 @@ export default {
             @input="handleInput"
         />
 		<span v-show="type === 'password'" class="input-group-text" id="basic-addon1" @click="handleView">
-				<i v-show="!view"><EyeHide /></i>
-				<i v-show="view"><EyeVisible /></i>
+				<i v-show="!view"><EyeVisible /></i>
+				<i v-show="view"><EyeHide /></i>
 		</span>
     </div>
 </template>

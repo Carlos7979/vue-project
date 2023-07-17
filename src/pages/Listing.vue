@@ -1,27 +1,28 @@
 <script>
     import Card from '../components/Card.vue'
     import { productInfo } from '../mixins/productInfo'
-    import { productsArrayProps } from '../mixins/productsArrayProps'
 
     export default {
         name: 'Listing',
-        emits: ['showInfo', 'handleQuantity', 'handleFav'],
+        emits: ['handleQuantity', 'handleFav'],
         components: {
             Card
         },
-        mixins: [productInfo, productsArrayProps],
+        props: {
+            cart: Array
+        },
+        mixins: [productInfo],
         data() {
             return {}
         },
         methods: {
-            handleShowInfo(data) {
-                this.$emit('showInfo', data)
-            },
-            handleQuantity(data) {
-                this.$emit('handleQuantity', data)
-            },
-            handleFav(data) {
-                this.$emit('handleFav', data)
+            getQuantity(id) {
+				return this.$store.getters.getQuantity(id)
+			}
+        },
+        computed: {
+            products() {
+                return this.$store.getters.getProducts
             }
         }
     }
@@ -32,11 +33,7 @@
         <div v-for="(product, i) of products" :key="`${i}-product`">
             <Card
                 :product="product"
-                :fav="sendIsFav(product.id)"
-                @showInfo="handleShowInfo"
-                :quantity="sendQuantity(product.id)"
-                @quantity="handleQuantity"
-                @fav="handleFav"
+                :quantity="getQuantity(product.id)"
             ></Card>
         </div>
     </div>
@@ -49,7 +46,7 @@
         padding: 0 10px;
         flex-wrap: wrap;
     }
-	.empty {
-		margin-right: 40%;
-	}
+    .empty {
+        margin-right: 40%;
+    }
 </style>
