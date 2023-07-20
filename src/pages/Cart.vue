@@ -1,17 +1,21 @@
 <script>
-    import Card from '../components/Card.vue'
     import CartMinusIconVue from '../components/icons/card/CartMinusIcon.vue'
+    import Button from '../components/Button.vue'
     import CartPlusIcon from '../components/icons/card/CartPlusIcon.vue'
     import Trash from '../components/icons/card/Trash.vue'
     import { productInfo } from '../mixins/productInfo'
+    import Swal from 'sweetalert2'
+	import axios from 'axios'
 
-    export default {
+    const { VITE_FOOD_URL: foodURL, VITE_USER_URL: usersURL } = import.meta.env
+    
+	export default {
         name: 'Cart',
         components: {
-            Card,
             CartMinusIconVue,
             CartPlusIcon,
-            Trash
+            Trash,
+            Button
         },
         mixins: [productInfo],
         data() {
@@ -22,14 +26,53 @@
                 this.$router.push({ path: `/info/${pid}` })
             },
             addQuantity(data) {
-				this.$store.dispatch('setQuantity', data)
+                this.$store.dispatch('setQuantity', data)
             },
             removeQuantity(data) {
-                if (data.quantity >= 0)
-                    this.$store.dispatch('setQuantity', data)
+                if (data.quantity >= 0) this.$store.dispatch('setQuantity', data)
             },
             emptyProduct(data) {
-				this.$store.dispatch('setQuantity', data)
+                this.$store.dispatch('setQuantity', data)
+            },
+            async confirmPurchase() {
+                try {
+                    const swal = await Swal.fire({
+                        title: 'Confirmación de compra',
+                        html: `¿Confirmas la compra de <b>${this.totalProducts}</b> producto${
+                            this.totalProducts > 1 ? 's' : ''
+                        } por un monto total de <b>${this.totalAmount}</b>?`,
+                        footer: 'Esta acción no puede revertirse',
+                        icon: 'question',
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonText: 'Comprar',
+                        reverseButtons: true
+                    })
+                    if (swal.isConfirmed) {
+                        const timestamp = Date.now()
+                        const orders = [{ timestamp, products: this.cart }, ...this.orders]
+                        const response = await axios.put(`${usersURL}/${this.user.id}`, {
+                            orders
+                        })
+                        if (response.status === 200) {
+                            const response = await axios.put(`${foodURL}carts/${this.user.cart}`, {
+                                cart: []
+                            })
+                            if (response.status === 200) {
+                                await Swal.fire({
+                                    icon: 'success',
+                                    title: `La compra se ha realizado exitosamente`,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+								this.$store.dispatch('addPurchase', orders)
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
             }
         },
         computed: {
@@ -52,6 +95,12 @@
             },
             cart() {
                 return this.$store.getters.getCart
+            },
+            orders() {
+                return this.$store.getters.getOrders
+            },
+            user() {
+                return this.$store.getters.getUser
             }
         }
     }
@@ -59,6 +108,7 @@
 <template>
     <div>
         <div v-show="cart.length" class="cart">
+            <Button :click="confirmPurchase" text="Confirmar compra" />
             <div class="cart-elements-header">
                 <div class="cart-elements">
                     <div class="cart-element t-header">Producto</div>
@@ -80,10 +130,13 @@
                     <div class="cart-element">
                         <span
                             class="click-cart"
-                            @click="() => removeQuantity({
+                            @click="
+                                () =>
+                                    removeQuantity({
                                         quantity: product.quantity - 1,
                                         productId: product.productId
-                                    })"
+                                    })
+                            "
                         >
                             <CartMinusIconVue />
                         </span>
@@ -106,10 +159,13 @@
                     </div>
                     <div
                         class="cart-element click-cart trash"
-                        @click="() => emptyProduct({
-                                        quantity: 0,
-                                        productId: product.productId
-                                    })"
+                        @click="
+                            () =>
+                                emptyProduct({
+                                    quantity: 0,
+                                    productId: product.productId
+                                })
+                        "
                     >
                         <Trash />
                     </div>

@@ -8,7 +8,6 @@
 
     export default {
         name: 'Register',
-        emits: ['showLogin', 'showListing', 'logged'],
         components: {
             Input
         },
@@ -31,15 +30,6 @@
             handleInput([name, value]) {
                 this.form[name] = value
                 if (this.isSubmitted && this.validate()) this.error = false
-            },
-            handleShowLogin() {
-                const form = this.$refs.form
-                form.reset()
-                this.$emit('showLogin', 'showLogin')
-            },
-            handleShowListing(user) {
-                this.$emit('showListing', 'showListing')
-                this.$emit('logged', user)
             },
             async validate() {
                 const error = this.$refs.error

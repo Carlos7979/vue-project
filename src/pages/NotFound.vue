@@ -26,7 +26,7 @@
     .notFound {
 		width: fit-content;
 		padding: 40px;
-		margin: 30px 39%;
+		margin: 30px auto;
 		background-color: whitesmoke;
 		border-radius: 5px;
 		border: solid 1px;

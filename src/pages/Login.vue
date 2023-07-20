@@ -3,7 +3,6 @@
     import Swal from 'sweetalert2'
     import axios from 'axios'
     import { saveInStorage } from '../utils/sessionStorage'
-    // import { RouterLink, RouterView } from 'vue-router'
     const usersURL = import.meta.env.VITE_USER_URL
 
     export default {
@@ -95,7 +94,7 @@
                             this.isSubmitted = false
                             saveInStorage('user', user)
 							this.$store.dispatch('login', user)
-                            this.$router.push({ path: '/listing' })
+                            this.$router.push({ path: `/${user.admin ? 'admin' : 'listing'}` })
                         })
                     }
                 } catch (err) {

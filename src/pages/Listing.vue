@@ -46,7 +46,4 @@
         padding: 0 10px;
         flex-wrap: wrap;
     }
-    .empty {
-        margin-right: 40%;
-    }
 </style>
