@@ -5,11 +5,12 @@
     import Trash from '../components/icons/card/Trash.vue'
     import { productInfo } from '../mixins/productInfo'
     import Swal from 'sweetalert2'
-	import axios from 'axios'
+    import axios from 'axios'
+    import { mapGetters, mapActions } from 'vuex'
 
     const { VITE_FOOD_URL: foodURL, VITE_USER_URL: usersURL } = import.meta.env
-    
-	export default {
+
+    export default {
         name: 'Cart',
         components: {
             CartMinusIconVue,
@@ -22,17 +23,19 @@
             return {}
         },
         methods: {
+            ...mapActions('cart', ['setQuantity']),
+            ...mapActions('user', ['addPurchase']),
             handleShowInfo(pid) {
                 this.$router.push({ path: `/info/${pid}` })
             },
             addQuantity(data) {
-                this.$store.dispatch('setQuantity', data)
+                this.setQuantity(data)
             },
             removeQuantity(data) {
-                if (data.quantity >= 0) this.$store.dispatch('setQuantity', data)
+                if (data.quantity >= 0) this.setQuantity(data)
             },
             emptyProduct(data) {
-                this.$store.dispatch('setQuantity', data)
+                this.setQuantity(data)
             },
             async confirmPurchase() {
                 try {
@@ -66,7 +69,7 @@
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
-								this.$store.dispatch('addPurchase', orders)
+                                this.addPurchase(orders)
                             }
                         }
                     }
@@ -76,6 +79,9 @@
             }
         },
         computed: {
+            ...mapGetters('product', ['getProducts']),
+            ...mapGetters('cart', ['getCart']),
+            ...mapGetters('user', ['getOrders', 'getUser']),
             totalProducts() {
                 let total = 0
                 this.cart.forEach(e => {
@@ -91,16 +97,16 @@
                 return total
             },
             products() {
-                return this.$store.getters.getProducts
+                return this.getProducts
             },
             cart() {
-                return this.$store.getters.getCart
+                return this.getCart
             },
             orders() {
-                return this.$store.getters.getOrders
+                return this.getOrders
             },
             user() {
-                return this.$store.getters.getUser
+                return this.getUser
             }
         }
     }

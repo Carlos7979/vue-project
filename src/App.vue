@@ -1,7 +1,8 @@
 <script>
     import Header from './components/Header.vue'
     import Nav from './components/Nav.vue'
-	
+	import { mapGetters } from 'vuex'
+
     export default {
         components: {
             Header,
@@ -13,8 +14,9 @@
         async created() {},
         methods: {},
         computed: {
+			...mapGetters('user', ['getName']),
             name() {
-                return this.$store.getters.getName
+                return this.getName
             }
         }
     }

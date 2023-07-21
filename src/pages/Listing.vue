@@ -1,28 +1,23 @@
 <script>
     import Card from '../components/Card.vue'
-    import { productInfo } from '../mixins/productInfo'
-
+	import { mapGetters } from 'vuex'
     export default {
         name: 'Listing',
-        emits: ['handleQuantity', 'handleFav'],
         components: {
             Card
         },
         props: {
             cart: Array
         },
-        mixins: [productInfo],
         data() {
             return {}
         },
-        methods: {
-            getQuantity(id) {
-				return this.$store.getters.getQuantity(id)
-			}
-        },
+        methods: {},
         computed: {
+			...mapGetters('product', ['getProducts']),
+			...mapGetters('cart', ['getQuantity']),
             products() {
-                return this.$store.getters.getProducts
+                return this.getProducts
             }
         }
     }

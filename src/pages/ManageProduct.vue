@@ -2,6 +2,8 @@
     import Input from '../components/Input.vue'
     import Swal from 'sweetalert2'
     import axios from 'axios'
+    import { mapGetters, mapActions } from 'vuex'
+
     const foodURL = import.meta.env.VITE_FOOD_URL
 
     export default {
@@ -25,10 +27,8 @@
             }
         },
         methods: {
+            ...mapActions('product', ['updateProducts']),
             handleInput([name, value]) {
-				console.log(name);
-				console.log(value);
-				console.log(typeof value);
                 this.form[name] = value
             },
             validate() {
@@ -41,6 +41,9 @@
                     }
                 }
                 return true
+            },
+            handleUpdateProducts(payload) {
+                this.updateProducts(payload)
             }
         },
         mounted() {
@@ -67,9 +70,9 @@
                             product = await axios.put(`${foodURL}/products/${pid}`, body)
                             action = 'update'
                         }
-						const status = product.status
+                        const status = product.status
                         if (status === 201 || 200) {
-							product = product.data
+                            product = product.data
                             Swal.fire({
                                 icon: 'success',
                                 title: `Producto ${
@@ -78,7 +81,7 @@
                                 showConfirmButton: false,
                                 timer: 1500
                             }).then(() => {
-                                this.$store.dispatch('updateProducts', {
+                                this.handleUpdateProducts({
                                     action: status === 201 ? 'create' : 'update',
                                     product
                                 })
@@ -92,9 +95,10 @@
             })
         },
         computed: {
+            ...mapGetters('product', ['getProductById']),
             product() {
                 if (this.$route.name === 'edit-product') {
-                    return this.$store.getters.getProductById(this.$route.params.id)
+                    return this.getProductById(this.$route.params.id)
                 } else {
                     return {}
                 }
@@ -145,7 +149,7 @@
                     id="price"
                     placeholder="200..."
                     :numberValue="product.price"
-					min="0"
+                    min="0"
                     @input="handleInput"
                 ></Input>
                 <Input
@@ -154,7 +158,7 @@
                     id="stock"
                     placeholder="10..."
                     :numberValue="product.stock"
-					min="0"
+                    min="0"
                     @input="handleInput"
                 ></Input>
                 <button class="btn form-control text-bg-dark p-3">

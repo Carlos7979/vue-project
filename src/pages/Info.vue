@@ -1,5 +1,6 @@
 <script>
 import Card from '../components/Card.vue'
+import { mapGetters } from 'vuex'
 export default {
     name: 'Info',
     components: {
@@ -10,11 +11,13 @@ export default {
     },
     methods: {},
 	computed: {
+		...mapGetters('product', ['getProductById']),
+		...mapGetters('cart', ['getQuantity']),
 		product() {
-			return this.$store.getters.getProductById(this.$route.params.id)
+			return this.getProductById(this.$route.params.id)
 		},
 		quantity() {
-			return this.$store.getters.getQuantity(this.$route.params.id)
+			return this.getQuantity(this.$route.params.id)
 		}
 	}
 }

@@ -1,6 +1,8 @@
 <script>
     import axios from 'axios'
-import { getFromStorage } from '../utils/sessionStorage'
+    import { getFromStorage } from '../utils/sessionStorage'
+    import { mapGetters } from 'vuex'
+
     const usersURL = import.meta.env.VITE_USER_URL
     export default {
         name: 'Order',
@@ -11,14 +13,14 @@ import { getFromStorage } from '../utils/sessionStorage'
             }
         },
         async mounted() {
-			let isAdmin
-			if (!this.isAdmin) {
-				const user = getFromStorage('user')
-				isAdmin = user.admin
-			}
+            let isAdmin
+            if (!this.isAdmin) {
+                const user = getFromStorage('user')
+                isAdmin = user.admin
+            }
             if (this.isAdmin || isAdmin) {
-                try {
-                    let users = await axios.get(usersURL)
+				try {
+					let users = await axios.get(usersURL)
                     users = users.data
                     const usersOrders = []
                     if (users.length) {
@@ -26,17 +28,16 @@ import { getFromStorage } from '../utils/sessionStorage'
 							if (!user.admin) {
 								user.orders.forEach(order => {
 									order.user = user.user
-									usersOrders.push(order)
-								})
-							}
-						})
-						usersOrders.sort((a, b) => {
-							console.log(a);
+                                    usersOrders.push(order)
+                                })
+                            }
+                        })
+                        usersOrders.sort((a, b) => {
 							if (a.timestamp > b.timestamp) return -1
-							if (a.timestamp < b.timestamp) return 1
-							return 0
-						})
-						this.usersOrders = usersOrders
+                            if (a.timestamp < b.timestamp) return 1
+                            return 0
+                        })
+                        this.usersOrders = usersOrders
                     }
                 } catch (error) {
                     console.log(error)
@@ -44,27 +45,29 @@ import { getFromStorage } from '../utils/sessionStorage'
             }
         },
         methods: {
-            product(id) {
-                return this.$store.getters.getProductById(id)
-            },
             total(order) {
                 let money = 0
                 let quantity = 0
                 order.products.forEach(product => {
-                    money += this.product(product.productId).price * product.quantity
+					money += this.getProductById(product.productId).price * product.quantity
                     quantity += product.quantity
                 })
                 return { money, quantity }
             }
         },
         computed: {
+			...mapGetters('user', ['getOrders']),
+			...mapGetters('user', { admin: 'isAdmin' }),
+            ...mapGetters('product', ['getProductById']),
             orders() {
-				if (this.isAdmin) return this.usersOrders
-                return this.$store.getters.getOrders
+				if (this.isAdmin) {
+					return this.usersOrders
+				}
+                return this.getOrders
             },
-			isAdmin() {
-				return this.$store.getters.isAdmin
-			}
+            isAdmin() {
+                return this.admin
+            }
         }
     }
 </script>
@@ -75,8 +78,10 @@ import { getFromStorage } from '../utils/sessionStorage'
                 <div class="product-elements-header">
                     <div class="product-elements">
                         <div class="product-element t-header">Nº {{ orders.length - i }}</div>
-                        <div v-show="isAdmin" class="product-element t-header">{{ order.user }}</div>
-						<div class="product-element t-header">Fecha y hora:</div>
+                        <div v-show="isAdmin" class="product-element t-header">
+                            {{ order.user }}
+                        </div>
+                        <div class="product-element t-header">Fecha y hora:</div>
                         <div class="product-element t-header">
                             {{ new Date(order.timestamp).toLocaleString() }}
                         </div>
@@ -96,25 +101,25 @@ import { getFromStorage } from '../utils/sessionStorage'
                 <div v-for="(p, i) of order.products" :key="`${i}-order`">
                     <div :class="`product-elements ${i % 2 === 1 ? 'even-line' : ''}`">
                         <div class="product-element">
-                            {{ product(p.productId).title }}
+                            {{ getProductById(p.productId).title }}
                         </div>
                         <div class="product-element">
                             <div class="image-container">
                                 <img
-                                    :src="product(p.productId).img"
-                                    :alt="product(p.productId).title"
+                                    :src="getProductById(p.productId).img"
+                                    :alt="getProductById(p.productId).title"
                                     @load="$event.target.style.opacity = 1"
                                 />
                             </div>
                         </div>
                         <div class="product-element">
-                            <span class="quantity">{{ product(p.productId).price }}</span>
+                            <span class="quantity">{{ getProductById(p.productId).price }}</span>
                         </div>
                         <div class="product-element">
                             <span class="quantity">{{ p.quantity }}</span>
                         </div>
                         <div class="product-element">
-                            {{ product(p.productId).price * p.quantity }}
+                            {{ getProductById(p.productId).price * p.quantity }}
                         </div>
                     </div>
                 </div>

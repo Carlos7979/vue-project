@@ -1,6 +1,5 @@
 <script>
     const icons = await import('./icons/form')
-    // const Icon = icon['Email']
     export default {
         name: 'Input',
         emits: ['input'],
@@ -17,12 +16,6 @@
 			textValue: String,
 			numberValue: Number
         },
-		mounted() {
-			if (this.numberValue) {
-				console.log(this.numberValue);
-				console.log(typeof this.numberValue);
-			}
-		},
         data() {
             return {
                 view: false

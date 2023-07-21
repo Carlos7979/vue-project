@@ -1,9 +1,9 @@
 <script>
     const icons = await import('./icons/card')
+    import { mapGetters, mapActions } from 'vuex'
 
     export default {
         name: 'Card',
-        emits: ['quantity', 'fav'],
         components: {
             ...icons
         },
@@ -25,13 +25,15 @@
             }
         },
         methods: {
+            ...mapActions('user', { toggle: 'toggleFav' }),
+            ...mapActions('cart', ['setQuantity']),
             toggleFav() {
-                this.$store.dispatch('toggleFav', this.product.id)
+                this.toggle(this.product.id)
             },
             async addQuantity() {
                 if (this.allowAddQuantity) {
                     this.allowAddQuantity = false
-                    await this.$store.dispatch('setQuantity', {
+                    await this.setQuantity({
                         quantity: this.quantity + 1,
                         productId: this.product.id
                     })
@@ -41,7 +43,7 @@
             async removeQuantity() {
                 if (this.quantity > 0 && this.allowRemoveQuantity) {
                     this.allowRemoveQuantity = false
-                    await this.$store.dispatch('setQuantity', {
+                    await this.setQuantity({
                         quantity: this.quantity - 1,
                         productId: this.product.id
                     })
@@ -50,7 +52,7 @@
             },
             emptyProduct() {
                 if (this.quantity > 0)
-                    this.$store.dispatch('setQuantity', {
+                    this.setQuantity({
                         quantity: 0,
                         productId: this.product.id
                     })
@@ -61,8 +63,9 @@
             }
         },
         computed: {
+            ...mapGetters('user', ['getFavById']),
             fav() {
-                return this.$store.getters.getFavById(this.product.id)
+                return this.getFavById(this.product.id)
             },
             addQuantityClass() {
                 return [

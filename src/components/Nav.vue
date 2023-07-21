@@ -1,5 +1,6 @@
 <script>
     import { getFromStorage } from '../utils/sessionStorage'
+	import { mapGetters, mapActions } from 'vuex'
     const title = {
         listing: 'Productos',
         info: 'Detalle del producto',
@@ -25,22 +26,27 @@
             this.title = title
             const user = getFromStorage('user')
             if (user) {
-                this.$store.dispatch('isLogged', user)
+                this.handleIsLogged(user)
             }
         },
         methods: {
+			...mapActions('user', ['logout', 'isLogged']),
             handleRoute(path) {
                 this.$router.push({ path })
             },
             handleLogout() {
                 sessionStorage.removeItem('user')
-                this.$store.dispatch('logout')
+                this.logout()
                 this.$router.push({ path: '/' })
-            }
+            },
+			handleIsLogged(user) {
+				this.isLogged(user)
+			}
         },
         computed: {
+			...mapGetters('user', { admin: 'isAdmin' }),
             isAdmin() {
-                return this.$store.getters.isAdmin
+                return this.admin
             }
         }
     }

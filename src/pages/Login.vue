@@ -3,6 +3,7 @@
     import Swal from 'sweetalert2'
     import axios from 'axios'
     import { saveInStorage } from '../utils/sessionStorage'
+	import { mapActions } from 'vuex'
     const usersURL = import.meta.env.VITE_USER_URL
 
     export default {
@@ -22,6 +23,7 @@
             }
         },
         methods: {
+			...mapActions('user', ['login']),
             async handleInput([name, value]) {
                 this.form[name] = value
                 if (this.isSubmitted && (await this.validate())) this.error = false
@@ -53,7 +55,10 @@
                 }
                 error.innerText = ''
                 return true
-            }
+            },
+			handleLogin(user) {
+				this.login(user)
+			}
         },
         mounted() {
             if (this.$route.name === 'unauthorized') this.validate(true)
@@ -93,7 +98,7 @@
                             }
                             this.isSubmitted = false
                             saveInStorage('user', user)
-							this.$store.dispatch('login', user)
+							this.handleLogin(user)
                             this.$router.push({ path: `/${user.admin ? 'admin' : 'listing'}` })
                         })
                     }

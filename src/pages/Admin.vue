@@ -4,6 +4,8 @@
 	import Button from '../components/Button.vue'
     import Swal from 'sweetalert2'
     import axios from 'axios'
+	import { mapGetters, mapActions } from 'vuex'
+
     const foodURL = import.meta.env.VITE_FOOD_URL
 
     export default {
@@ -17,6 +19,7 @@
             return {}
         },
         methods: {
+			...mapActions('product', ['updateProducts']),
             handleShowInfo(pid) {
                 this.$router.push({ path: `/info/${pid}` })
             },
@@ -44,10 +47,9 @@
                 })
                     .then(async (result) => {
                         if (result.isConfirmed) {
-                            // this.$store.dispatch('deleteProduct', data)
                             const response = await axios.delete(`${foodURL}/products/${product.id}`)
                             if (response.status === 200) {
-								this.$store.dispatch('updateProducts', {
+								this.updateProducts({
                                     action: 'delete',
                                     product
                                 })
@@ -58,8 +60,9 @@
             }
         },
         computed: {
+			...mapGetters('product', ['getProducts']),
             products() {
-                return this.$store.getters.getProducts
+                return this.getProducts
             }
         }
     }
