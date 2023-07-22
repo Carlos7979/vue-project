@@ -35,10 +35,7 @@
             emptyProduct(data) {
                 this.setQuantity(data)
             },
-			sendProduct(id) {
-                return this.products.find(e => e.id === id)
-            },
-            async confirmPurchase() {
+			async confirmPurchase() {
                 try {
                     const swal = await Swal.fire({
                         title: 'Confirmación de compra',
@@ -80,7 +77,7 @@
             }
         },
         computed: {
-            ...mapGetters('product', ['getProducts']),
+            ...mapGetters('product', ['getProducts', 'getProductById']),
             ...mapGetters('cart', ['getCart']),
             ...mapGetters('user', ['getOrders', 'getUser']),
             totalProducts() {
@@ -93,7 +90,8 @@
             totalAmount() {
                 let total = 0
                 this.cart.forEach(e => {
-                    total += this.sendProduct(e.productId)['price'] * e.quantity
+					console.log(this.getProductById(e.productId));
+                    total += this.getProductById(e.productId)['price'] * e.quantity
                 })
                 return total
             },
@@ -131,9 +129,9 @@
                         @click="() => handleShowInfo(product.productId)"
                         class="cart-element route"
                     >
-                        {{ sendProduct(product.productId).title }}
+                        {{ getProductById(product.productId).title }}
                     </div>
-                    <div class="cart-element">{{ products[i].price }}</div>
+                    <div class="cart-element">{{ getProductById(product.productId).price }}</div>
                     <div class="cart-element">
                         <span
                             class="click-cart"
@@ -162,7 +160,7 @@
                         </span>
                     </div>
                     <div class="cart-element">
-                        {{ product.quantity * products[i].price }}
+                        {{ product.quantity * getProductById(product.productId).price }}
                     </div>
                     <div
                         class="cart-element click-cart trash"
