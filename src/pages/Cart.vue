@@ -3,7 +3,6 @@
     import Button from '../components/Button.vue'
     import CartPlusIcon from '../components/icons/card/CartPlusIcon.vue'
     import Trash from '../components/icons/card/Trash.vue'
-    import { productInfo } from '../mixins/productInfo'
     import Swal from 'sweetalert2'
     import axios from 'axios'
     import { mapGetters, mapActions } from 'vuex'
@@ -18,8 +17,7 @@
             Trash,
             Button
         },
-        mixins: [productInfo],
-        data() {
+		data() {
             return {}
         },
         methods: {
@@ -36,6 +34,9 @@
             },
             emptyProduct(data) {
                 this.setQuantity(data)
+            },
+			sendProduct(id) {
+                return this.products.find(e => e.id === id)
             },
             async confirmPurchase() {
                 try {

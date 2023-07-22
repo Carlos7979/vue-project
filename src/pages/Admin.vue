@@ -125,7 +125,6 @@
                 </div>
             </div>
         </div>
-        <div v-show="!products.length" class="empty">No hay productos en existencia</div>
     </div>
 </template>
 <style scoped>

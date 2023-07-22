@@ -24,7 +24,6 @@
 </script>
 <template>
     <div class="listing">
-        <div class="empty" v-show="!products.length">No hay productos en existencia</div>
         <div v-for="(product, i) of products" :key="`${i}-product`">
             <Card
                 :product="product"
