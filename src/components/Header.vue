@@ -8,7 +8,7 @@
             return {}
         },
         created() {
-            this.title = 'Proyecto final (3ra entrega) | Vue Bakery'
+            this.title = 'Proyecto final | Vue Bakery'
             this.coderImg = coderImg
             this.coderW = 50
             this.vueImg = vueImg
