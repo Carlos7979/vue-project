@@ -32,9 +32,8 @@ jobs:
         run: pnpm build
 
       - name: Create env file
-        run: 
-          echo "VITE_FOOD_URL= ${{ secrets.VITE_FOOD_URL }}" > .env
-          echo "VITE_USER_URL= ${{ secrets.VITE_USER_URL }}" > .env
+        run: echo "VITE_FOOD_URL= ${{ secrets.VITE_FOOD_URL }}" > .env
+        run:  echo "VITE_USER_URL= ${{ secrets.VITE_USER_URL }}" > .env
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v2
