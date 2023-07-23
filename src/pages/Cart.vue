@@ -77,7 +77,7 @@
             }
         },
         computed: {
-            ...mapGetters('product', ['getProducts', 'getProductById']),
+            ...mapGetters('product', ['getProductById']),
             ...mapGetters('cart', ['getCart']),
             ...mapGetters('user', ['getOrders', 'getUser']),
             totalProducts() {
@@ -90,13 +90,9 @@
             totalAmount() {
                 let total = 0
                 this.cart.forEach(e => {
-					console.log(this.getProductById(e.productId));
                     total += this.getProductById(e.productId)['price'] * e.quantity
                 })
                 return total
-            },
-            products() {
-                return this.getProducts
             },
             cart() {
                 return this.getCart
