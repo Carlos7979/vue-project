@@ -1,0 +1,12 @@
+github:
+  pages:
+    build:
+      environment:
+        NODE_ENV: production
+    config:
+      rewrites: [
+        {
+          from: '/',
+          to: '/index.html'
+        }
+      ]
