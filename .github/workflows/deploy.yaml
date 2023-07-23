@@ -31,6 +31,10 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # - name: Create env file
+      #   env: 
+
+
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v2
         with:
