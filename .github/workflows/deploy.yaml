@@ -37,6 +37,14 @@ jobs:
           name: production-files
           path: ./dist
 
+  config:
+      rewrites: [
+        {
+          from: '/',
+          to: '/index.html'
+        }
+      ]
+
   deploy:
     name: Deploy
     needs: build
