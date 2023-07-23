@@ -31,8 +31,10 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # - name: Create env file
-      #   env: 
+      - name: Create env file
+        env: 
+          VITE_FOOD_URL: ${{ secrets.VITE_FOOD_URL }}
+          VITE_USER_URL: ${{ secrets.VITE_USER_URL }}
 
 
       - name: Upload production-ready build files
