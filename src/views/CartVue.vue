@@ -1,8 +1,8 @@
 <script>
     import CartMinusIconVue from '../components/icons/card/CartMinusIcon.vue'
-    import Button from '../components/Button.vue'
+    import ButtonVue from '../components/ButtonVue.vue'
     import CartPlusIcon from '../components/icons/card/CartPlusIcon.vue'
-    import Trash from '../components/icons/card/Trash.vue'
+    import TrashVue from '../components/icons/card/TrashVue.vue'
     import Swal from 'sweetalert2'
     import axios from 'axios'
     import { mapGetters, mapActions } from 'vuex'
@@ -14,8 +14,8 @@
         components: {
             CartMinusIconVue,
             CartPlusIcon,
-            Trash,
-            Button
+            TrashVue,
+            ButtonVue
         },
 		data() {
             return {}
@@ -109,7 +109,7 @@
 <template>
     <div>
         <div v-show="cart.length" class="cart">
-            <Button :click="confirmPurchase" text="Confirmar compra" />
+            <ButtonVue :click="confirmPurchase" text="Confirmar compra" />
             <div class="cart-elements-header">
                 <div class="cart-elements">
                     <div class="cart-element t-header">Producto</div>
@@ -168,7 +168,7 @@
                                 })
                         "
                     >
-                        <Trash />
+                        <TrashVue />
                     </div>
                 </div>
             </div>

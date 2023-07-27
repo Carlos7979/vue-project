@@ -7,62 +7,62 @@ const router = createRouter({
         {
             path: '/',
             name: 'login',
-			component: () => import('./pages/Login.vue')
+			component: () => import('./views/LoginVue.vue')
         },
         {
             path: '/unauthorized',
             name: 'unauthorized',
-            component: () => import('./pages/Login.vue')
+            component: () => import('./views/LoginVue.vue')
         },
         {
             path: '/register',
             name: 'register',
-            component: () => import('./pages/Register.vue')
+            component: () => import('./views/RegisterVue.vue')
         },
         {
             path: '/listing',
             name: 'listing',
-            component: () => import('./pages/Listing.vue')
+            component: () => import('./views/ListingVue.vue')
         },
         {
             path: '/info/:id',
             name: 'info',
-            component: () => import('./pages/Info.vue')
+            component: () => import('./views/InfoVue.vue')
         },
         {
             path: '/cart',
             name: 'cart',
-            component: () => import('./pages/Cart.vue')
+            component: () => import('./views/CartVue.vue')
         },
 		{
             path: '/orders',
             name: 'orders',
-            component: () => import('./pages/Orders.vue')
+            component: () => import('./views/OrdersVue.vue')
         },
         {
             path: '/admin',
             name: 'admin',
-            component: () => import('./pages/Admin.vue')
+            component: () => import('./views/AdminVue.vue')
         },
 		{
 			path: '/admin/product/new-product',
             name: 'new-product',
-            component: () => import('./pages/ManageProduct.vue')
+            component: () => import('./views/ManageProduct.vue')
         },
 		{
 			path: '/admin/product/:id',
 			name: 'edit-product',
-			component: () => import('./pages/ManageProduct.vue')
+			component: () => import('./views/ManageProduct.vue')
 		},
 		{
             path: '/admin/orders',
             name: 'admin-orders',
-            component: () => import('./pages/Orders.vue')
+            component: () => import('./views/OrdersVue.vue')
         },
         {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
-            component: () => import('./pages/NotFound.vue')
+            component: () => import('./views/NotFound.vue')
         }
     ]
 })

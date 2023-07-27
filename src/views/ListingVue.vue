@@ -1,10 +1,10 @@
 <script>
-    import Card from '../components/Card.vue'
+    import CardVue from '../components/CardVue.vue'
 	import { mapGetters } from 'vuex'
     export default {
         name: 'Listing',
         components: {
-            Card
+            CardVue
         },
         props: {
             cart: Array
@@ -25,10 +25,10 @@
 <template>
     <div class="listing">
         <div v-for="(product, i) of products" :key="`${i}-product`">
-            <Card
+            <CardVue
                 :product="product"
                 :quantity="getQuantity(product.id)"
-            ></Card>
+            ></CardVue>
         </div>
     </div>
 </template>

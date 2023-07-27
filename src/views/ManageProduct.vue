@@ -1,5 +1,5 @@
 <script>
-    import Input from '../components/Input.vue'
+    import InputVue from '../components/InputVue.vue'
     import Swal from 'sweetalert2'
     import axios from 'axios'
     import { mapGetters, mapActions } from 'vuex'
@@ -9,7 +9,7 @@
     export default {
         name: 'ManageProduct',
         components: {
-            Input
+            InputVue
         },
         props: {},
         data() {
@@ -110,23 +110,23 @@
     <div class="manage-product-container">
         <div class="manage-product">
             <form ref="form" action="" method="post">
-                <Input
+                <InputVue
                     label="Título:"
                     type="text"
                     id="title"
                     placeholder="Selva negra..."
                     :textValue="product?.title"
                     @input="handleInput"
-                ></Input>
-                <Input
+                ></InputVue>
+                <InputVue
                     label="Url de la imagen:"
                     type="text"
                     id="img"
                     placeholder="https://..."
                     :textValue="product.img"
                     @input="handleInput"
-                ></Input>
-                <Input
+                ></InputVue>
+                <InputVue
                     label="Descripción corta"
                     type="textarea"
                     max="95"
@@ -134,16 +134,16 @@
                     placeholder="...hasta 95 caracteres"
                     :textValue="product.shortDescription"
                     @input="handleInput"
-                ></Input>
-                <Input
+                ></InputVue>
+                <InputVue
                     label="Descripción larga"
                     type="textarea"
                     id="largeDescription"
                     placeholder="Introduce una descripción del producto..."
                     :textValue="product.largeDescription"
                     @input="handleInput"
-                ></Input>
-                <Input
+                ></InputVue>
+                <InputVue
                     label="Precio"
                     type="number"
                     id="price"
@@ -151,8 +151,8 @@
                     :numberValue="product.price"
                     min="0"
                     @input="handleInput"
-                ></Input>
-                <Input
+                ></InputVue>
+                <InputVue
                     label="Stock"
                     type="number"
                     id="stock"
@@ -160,7 +160,7 @@
                     :numberValue="product.stock"
                     min="0"
                     @input="handleInput"
-                ></Input>
+                ></InputVue>
                 <button class="btn form-control text-bg-dark p-3">
                     {{ $route.name === 'new-product' ? 'Agregar Producto' : 'Actualizar Producto' }}
                 </button>

@@ -1,12 +1,12 @@
 <script>
-    import Header from './components/Header.vue'
-    import Nav from './components/Nav.vue'
+    import HeaderVue from './components/HeaderVue.vue'
+    import NavVue from './components/NavVue.vue'
 	import { mapGetters } from 'vuex'
 
     export default {
         components: {
-            Header,
-            Nav
+            HeaderVue,
+            NavVue
         },
         data() {
             return {}
@@ -24,10 +24,10 @@
 
 <template>
     <div>
-        <Header></Header>
+        <HeaderVue></HeaderVue>
         <div class="main">
             <div v-show="name">
-                <Nav :name="name"></Nav>
+                <NavVue :name="name"></NavVue>
             </div>
             <RouterView />
         </div>

@@ -1,10 +1,10 @@
 <script>
-import Card from '../components/Card.vue'
+import CardVue from '../components/CardVue.vue'
 import { mapGetters } from 'vuex'
 export default {
     name: 'Info',
     components: {
-        Card
+        CardVue
     },
     data() {
         return {}
@@ -24,11 +24,11 @@ export default {
 </script>
 <template>
     <div class="listing">
-        <Card
+        <CardVue
             :product="product"
             :detail="true"
             :quantity="quantity"
-        ></Card>
+        ></CardVue>
     </div>
 </template>
 <style scoped>

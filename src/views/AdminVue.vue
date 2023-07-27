@@ -1,7 +1,7 @@
 <script>
-    import Trash from '../components/icons/card/Trash.vue'
-    import Edit from '../components/icons/admin/Edit.vue'
-	import Button from '../components/Button.vue'
+    import TrashVue from '../components/icons/card/TrashVue.vue'
+    import EditVue from '../components/icons/admin/EditVue.vue'
+	import ButtonVue from '../components/ButtonVue.vue'
     import Swal from 'sweetalert2'
     import axios from 'axios'
 	import { mapGetters, mapActions } from 'vuex'
@@ -11,9 +11,9 @@
     export default {
         name: 'Admin',
         components: {
-            Trash,
-            Edit,
-			Button
+            TrashVue,
+            EditVue,
+			ButtonVue
         },
         data() {
             return {}
@@ -69,7 +69,7 @@
 </script>
 <template>
     <div>
-        <Button :click="addProduct" text="Agregar producto" />
+        <ButtonVue :click="addProduct" text="Agregar producto" />
 		<div v-show="products.length" class="products">
             <div class="product-elements-header">
                 <div class="product-elements">
@@ -103,14 +103,14 @@
                     </div>
                     <div class="product-element">
                         <span class="click-cart" @click="() => editProduct(product.id)">
-                            <Edit />
+                            <EditVue />
                         </span>
                     </div>
                     <div
                         class="product-element click-cart trash"
                         @click="() => deleteProduct(product)"
                     >
-                        <Trash />
+                        <TrashVue />
                     </div>
                 </div>
             </div>

@@ -40,9 +40,9 @@
         <span class="input-group-text">
             <label v-show="label" :for="id">{{ label }}</label>
             <div v-show="!label">
-				<i v-show="type === 'text'"><User /></i>
-				<i v-show="type === 'email'"><Email /></i>
-				<i v-show="type === 'password'"><Password /></i>
+				<i v-show="type === 'text'"><UserVue /></i>
+				<i v-show="type === 'email'"><EmailVue /></i>
+				<i v-show="type === 'password'"><PasswordVue /></i>
 			</div>
         </span>
         <input

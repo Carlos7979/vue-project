@@ -1,5 +1,5 @@
 <script>
-    import Input from '../components/Input.vue'
+    import InputVue from '../components/InputVue.vue'
     import Swal from 'sweetalert2'
     import axios from 'axios'
     import { saveInStorage } from '../utils/sessionStorage'
@@ -9,7 +9,7 @@
     export default {
         name: 'Login',
         components: {
-            Input
+            InputVue
         },
         props: {},
         data() {
@@ -116,8 +116,8 @@
 <template>
     <div class="register">
         <form ref="form" action="" method="post">
-            <Input type="text" id="user" placeholder="user1" @input="handleInput"></Input>
-            <Input type="password" id="password" placeholder="test123" @input="handleInput"></Input>
+            <InputVue type="text" id="user" placeholder="user1" @input="handleInput"></InputVue>
+            <InputVue type="password" id="password" placeholder="test123" @input="handleInput"></InputVue>
             <button class="btn form-control text-bg-dark p-3">INGRESAR</button>
             <div ref="error" :class="error ? 'error' : ''"></div>
         </form>

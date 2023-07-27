@@ -1,15 +1,15 @@
 import CartIcon from './CartIcon.vue'
 import CartPlusIcon from './CartPlusIcon.vue'
 import CartMinusIcon from './CartMinusIcon.vue'
-import Heart from './Heart.vue'
+import HeartIcon from './HeartIcon.vue'
 import HeartSolid from './HeartSolid.vue'
-import Trash from './Trash.vue'
+import TrashVue from './TrashVue.vue'
 
 export {
 	CartIcon,
 	CartPlusIcon,
 	CartMinusIcon,
-	Heart,
+	HeartIcon,
 	HeartSolid,
-	Trash
+	TrashVue
 }

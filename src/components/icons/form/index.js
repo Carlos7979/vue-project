@@ -1,13 +1,13 @@
-import User from './User.vue'
-import Email from './Email.vue'
-import Password from './Password.vue'
+import UserVue from './UserVue.vue'
+import EmailVue from './EmailVue.vue'
+import PasswordVue from './PasswordVue.vue'
 import EyeHide from './EyeHide.vue'
 import EyeVisible from './EyeVisible.vue'
 
 export {
-	User,
-	Email,
-	Password,
+	UserVue,
+	EmailVue,
+	PasswordVue,
 	EyeHide,
 	EyeVisible
 }
