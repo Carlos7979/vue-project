@@ -83,7 +83,7 @@
             </div>
             <div v-for="(product, i) of products" :key="`${i}-product`">
                 <div class="product-elements">
-                    <div @click="() => handleShowInfo(product.id)" class="product-element route">
+                    <div @click="() => handleShowInfo(product.id)" class="product-element">
                         {{ product.title }}
                     </div>
                     <div class="product-element">
@@ -160,11 +160,6 @@
 
     .t-header {
         font-weight: 600;
-    }
-
-    .route:hover {
-        cursor: pointer;
-        color: blue;
     }
 
     .quantity {
